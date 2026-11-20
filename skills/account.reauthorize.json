@@ -1,0 +1,27 @@
+{
+  "id": "account.reauthorize",
+  "version": "1.0.0",
+  "operations": [
+    "auth.connect",
+    "account.read",
+    "capability.read"
+  ],
+  "execution": "workflow",
+  "workflow": "oauth.connect@1",
+  "risk": "LOCAL_WRITE",
+  "approval": "none",
+  "targets": "explicit_account_ids",
+  "failure_policy": "stop",
+  "compensate": "none",
+  "output_profile": "compact",
+  "input": {
+    "account_id": {
+      "type": "string",
+      "required": true
+    },
+    "operations": {
+      "type": "string[]",
+      "max_items": 30
+    }
+  }
+}

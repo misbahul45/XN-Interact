@@ -1,0 +1,811 @@
+{
+  "version": 1,
+  "verification_methods": {
+    "UT": "unit",
+    "CT": "contract",
+    "IT": "integration",
+    "ST": "security",
+    "BT": "benchmark",
+    "MR": "manual review"
+  },
+  "requirements": [
+    {
+      "id": "CORE-01",
+      "priority": "MUST",
+      "source": "spec 14.1",
+      "text": "Bun-only runtime execution for the release artifact",
+      "acceptance": "Fresh machine runs bun run src/main.ts and bun test",
+      "verify": [
+        "CT"
+      ]
+    },
+    {
+      "id": "CORE-02",
+      "priority": "MUST",
+      "source": "spec 14.1",
+      "text": "MCP-only product interface; no app, frontend or agent",
+      "acceptance": "Repo and runtime inventory",
+      "verify": [
+        "MR"
+      ]
+    },
+    {
+      "id": "CORE-03",
+      "priority": "MUST",
+      "source": "spec 14.1",
+      "text": "Official SDK v2 and tested protocol version",
+      "acceptance": "Inspector and SDK client compatible",
+      "verify": [
+        "CT"
+      ]
+    },
+    {
+      "id": "CORE-04",
+      "priority": "MUST",
+      "source": "spec 14.1",
+      "text": "stdio transport; stdout reserved for protocol",
+      "acceptance": "1,000 successive tool calls parse without log corruption",
+      "verify": [
+        "CT"
+      ]
+    },
+    {
+      "id": "CORE-05",
+      "priority": "MUST",
+      "source": "spec 14.1",
+      "text": "Stable typed tool registry",
+      "acceptance": "tools/list schema validates all tools",
+      "verify": [
+        "CT"
+      ]
+    },
+    {
+      "id": "CORE-06",
+      "priority": "MUST",
+      "source": "spec 14.1",
+      "text": "Resources expose capability, skill and workflow contracts",
+      "acceptance": "Read, pagination and inaccessible-ref tests",
+      "verify": [
+        "CT"
+      ]
+    },
+    {
+      "id": "CORE-07",
+      "priority": "SHOULD",
+      "source": "spec 14.1",
+      "text": "Tasks/MRTR/elicitation where negotiated, with tool polling fallback",
+      "acceptance": "Legacy and new host compatibility matrix",
+      "verify": [
+        "IT"
+      ]
+    },
+    {
+      "id": "CORE-08",
+      "priority": "SHOULD",
+      "source": "spec 14.1",
+      "text": "Opt-in authenticated Streamable HTTP",
+      "acceptance": "Origin/Host and cross-client authorization tests before enabling",
+      "verify": [
+        "ST"
+      ]
+    },
+    {
+      "id": "CORE-09",
+      "priority": "MUST",
+      "source": "spec 14.1",
+      "text": "No ambient current account",
+      "acceptance": "Write without explicit account ID fails validation",
+      "verify": [
+        "UT"
+      ]
+    },
+    {
+      "id": "CORE-10",
+      "priority": "MUST",
+      "source": "spec 14.1",
+      "text": "Deterministic routing; no internal LLM",
+      "acceptance": "Static scan, network trace, reproducibility",
+      "verify": [
+        "MR",
+        "UT"
+      ]
+    },
+    {
+      "id": "CORE-11",
+      "priority": "MUST",
+      "source": "CR-01",
+      "text": "Wire tool names match ^[a-z][a-z0-9_]{0,63}$ and are accepted unchanged by Claude Code and Codex",
+      "acceptance": "Both hosts list and call every tool by its catalog name",
+      "verify": [
+        "IT"
+      ]
+    },
+    {
+      "id": "CORE-12",
+      "priority": "MUST",
+      "source": "CR-15",
+      "text": "Implemented tools, skills, workflows, enums and error codes equal plan/catalog.json",
+      "acceptance": "Drift test fails on any difference",
+      "verify": [
+        "CT"
+      ]
+    },
+    {
+      "id": "AUTH-01",
+      "priority": "MUST",
+      "source": "spec 14.2",
+      "text": "Operator developer app profiles separate from user grants",
+      "acceptance": "No secrets in user MCP tool params",
+      "verify": [
+        "CT"
+      ]
+    },
+    {
+      "id": "AUTH-02",
+      "priority": "MUST",
+      "source": "spec 14.2",
+      "text": "Per-provider official OAuth flow",
+      "acceptance": "Real consent and token exchange for an approved test account",
+      "verify": [
+        "IT"
+      ]
+    },
+    {
+      "id": "AUTH-03",
+      "priority": "MUST",
+      "source": "spec 14.2",
+      "text": "Unpredictable state and PKCE where supported or required",
+      "acceptance": "State swap and code injection rejected",
+      "verify": [
+        "ST"
+      ]
+    },
+    {
+      "id": "AUTH-04",
+      "priority": "MUST",
+      "source": "spec 14.2",
+      "text": "Exact redirect and callback validation per provider",
+      "acceptance": "Callback mismatch and expired attempt rejected",
+      "verify": [
+        "ST"
+      ]
+    },
+    {
+      "id": "AUTH-05",
+      "priority": "MUST",
+      "source": "spec 14.2",
+      "text": "Multi-account separation and role discovery",
+      "acceptance": "Two distinct accounts remain isolated",
+      "verify": [
+        "IT"
+      ]
+    },
+    {
+      "id": "AUTH-06",
+      "priority": "MUST",
+      "source": "spec 14.2",
+      "text": "Granted scope inspection, partial consent and reauth",
+      "acceptance": "Missing scope returns exact MISSING_SCOPES",
+      "verify": [
+        "IT"
+      ]
+    },
+    {
+      "id": "AUTH-07",
+      "priority": "MUST",
+      "source": "spec 14.2",
+      "text": "Atomic refresh without stampede",
+      "acceptance": "20 concurrent reads cause at most one refresh per grant revision",
+      "verify": [
+        "UT",
+        "IT"
+      ]
+    },
+    {
+      "id": "AUTH-08",
+      "priority": "MUST",
+      "source": "spec 14.2",
+      "text": "Secure revocation and vault purge",
+      "acceptance": "Revoked credential cannot be used",
+      "verify": [
+        "ST",
+        "IT"
+      ]
+    },
+    {
+      "id": "AUTH-09",
+      "priority": "MUST",
+      "source": "spec 14.2",
+      "text": "No leaked credentials in logs or results",
+      "acceptance": "Canary token absent from every result and snapshot surface",
+      "verify": [
+        "ST"
+      ]
+    },
+    {
+      "id": "AUTH-10",
+      "priority": "MUST",
+      "source": "spec 14.2",
+      "text": "No silent insecure secret-storage fallback",
+      "acceptance": "Unavailable keyring locks sensitive operations",
+      "verify": [
+        "ST"
+      ]
+    },
+    {
+      "id": "AUTH-11",
+      "priority": "MUST",
+      "source": "spec 14.2",
+      "text": "Permission and role changes invalidate capability snapshots",
+      "acceptance": "Changing role or grant revision removes the capability",
+      "verify": [
+        "UT"
+      ]
+    },
+    {
+      "id": "AUTH-12",
+      "priority": "SHOULD",
+      "source": "spec 14.2",
+      "text": "HTTPS callback mode when a provider mandates it",
+      "acceptance": "End-to-end staged consent and threat model",
+      "verify": [
+        "IT",
+        "MR"
+      ]
+    },
+    {
+      "id": "ROUTE-01",
+      "priority": "MUST",
+      "source": "spec 14.3",
+      "text": "Seven versioned provider adapters or explicit unavailable manifests",
+      "acceptance": "Seven providers listed with correct state",
+      "verify": [
+        "CT"
+      ]
+    },
+    {
+      "id": "ROUTE-02",
+      "priority": "MUST",
+      "source": "spec 14.3",
+      "text": "No capability without documented permission and approval",
+      "acceptance": "Unknown permission cannot resolve AVAILABLE",
+      "verify": [
+        "UT"
+      ]
+    },
+    {
+      "id": "ROUTE-03",
+      "priority": "MUST",
+      "source": "spec 14.3",
+      "text": "Typed operation, account, role, grant and entitlement resolution",
+      "acceptance": "Permutation matrix tests pass",
+      "verify": [
+        "UT"
+      ]
+    },
+    {
+      "id": "ROUTE-04",
+      "priority": "MUST",
+      "source": "spec 14.3",
+      "text": "Provider-native options validated; unknown fields rejected",
+      "acceptance": "Fuzz native option schemas",
+      "verify": [
+        "CT"
+      ]
+    },
+    {
+      "id": "ROUTE-05",
+      "priority": "MUST",
+      "source": "spec 14.3",
+      "text": "Denied API never triggers browser automation",
+      "acceptance": "Mock 403 or approval denied; no browser execution",
+      "verify": [
+        "ST"
+      ]
+    },
+    {
+      "id": "ROUTE-06",
+      "priority": "MUST",
+      "source": "spec 14.3",
+      "text": "Per-operation cost and quota admission checks",
+      "acceptance": "Over-budget denied before the upstream request",
+      "verify": [
+        "UT"
+      ]
+    },
+    {
+      "id": "ROUTE-07",
+      "priority": "MUST",
+      "source": "spec 14.3",
+      "text": "Provider errors normalized without losing provenance",
+      "acceptance": "Contract fixtures for 401, 403, 429 and 5xx",
+      "verify": [
+        "CT"
+      ]
+    },
+    {
+      "id": "ROUTE-08",
+      "priority": "MUST",
+      "source": "spec 14.3",
+      "text": "Provider endpoints enforced by host allowlist",
+      "acceptance": "SSRF attempts refused",
+      "verify": [
+        "ST"
+      ]
+    },
+    {
+      "id": "ROUTE-09",
+      "priority": "SHOULD",
+      "source": "spec 14.3",
+      "text": "Capability refresh and policy epoch invalidation",
+      "acceptance": "Recheck on version, product or grant change",
+      "verify": [
+        "UT"
+      ]
+    },
+    {
+      "id": "ROUTE-10",
+      "priority": "SHOULD",
+      "source": "spec 14.3",
+      "text": "Manual-only or unsupported offers a clear reason and safe handoff",
+      "acceptance": "End-to-end unsupported feature test",
+      "verify": [
+        "CT"
+      ]
+    },
+    {
+      "id": "SKILL-01",
+      "priority": "MUST",
+      "source": "spec 14.4",
+      "text": "Declarative, versioned, schema-checked skill registry",
+      "acceptance": "Invalid or duplicate manifest rejected at load",
+      "verify": [
+        "UT"
+      ]
+    },
+    {
+      "id": "SKILL-02",
+      "priority": "MUST",
+      "source": "spec 14.4",
+      "text": "Exact deterministic skill ID routing",
+      "acceptance": "Same inputs and revision produce the same plan hash",
+      "verify": [
+        "UT"
+      ]
+    },
+    {
+      "id": "SKILL-03",
+      "priority": "MUST",
+      "source": "spec 14.4",
+      "text": "No arbitrary JavaScript execution from manifests",
+      "acceptance": "Malicious manifest cannot import or execute code",
+      "verify": [
+        "ST"
+      ]
+    },
+    {
+      "id": "SKILL-04",
+      "priority": "MUST",
+      "source": "spec 14.4",
+      "text": "Capability filter before workflow",
+      "acceptance": "Unsupported target excluded with documented reason",
+      "verify": [
+        "UT"
+      ]
+    },
+    {
+      "id": "SKILL-05",
+      "priority": "MUST",
+      "source": "spec 14.4",
+      "text": "Ambiguous selection fails with explicit alternatives",
+      "acceptance": "Tie case yields AMBIGUOUS_SKILL",
+      "verify": [
+        "UT"
+      ]
+    },
+    {
+      "id": "FLOW-01",
+      "priority": "MUST",
+      "source": "spec 14.4",
+      "text": "Persist plan, version and steps before side effects",
+      "acceptance": "Crash injection after journal commit",
+      "verify": [
+        "IT"
+      ]
+    },
+    {
+      "id": "FLOW-02",
+      "priority": "MUST",
+      "source": "spec 14.4",
+      "text": "Independent per-provider target status",
+      "acceptance": "2 success / 1 fail / 1 pending reported accurately",
+      "verify": [
+        "CT"
+      ]
+    },
+    {
+      "id": "FLOW-03",
+      "priority": "MUST",
+      "source": "spec 14.4",
+      "text": "No blind write retry after an unknown outcome",
+      "acceptance": "Drop response after side effect; no duplicate call",
+      "verify": [
+        "IT"
+      ]
+    },
+    {
+      "id": "FLOW-04",
+      "priority": "MUST",
+      "source": "spec 14.4",
+      "text": "Restart recovery with reconciliation",
+      "acceptance": "Kill and restart mid-publish; journal continuity",
+      "verify": [
+        "IT"
+      ]
+    },
+    {
+      "id": "FLOW-05",
+      "priority": "MUST",
+      "source": "spec 14.4",
+      "text": "Approval bound to the immutable plan hash",
+      "acceptance": "Altered content after approval rejected",
+      "verify": [
+        "ST"
+      ]
+    },
+    {
+      "id": "FLOW-06",
+      "priority": "MUST",
+      "source": "spec 14.4",
+      "text": "MCP client cannot self-approve through tool arguments",
+      "acceptance": "confirm:true and replayed nonce rejected",
+      "verify": [
+        "ST"
+      ]
+    },
+    {
+      "id": "FLOW-07",
+      "priority": "MUST",
+      "source": "spec 14.4",
+      "text": "Cancellation prevents future steps without fabricated rollback",
+      "acceptance": "Cancel under async provider; status accurate",
+      "verify": [
+        "IT"
+      ]
+    },
+    {
+      "id": "FLOW-08",
+      "priority": "SHOULD",
+      "source": "spec 14.4",
+      "text": "Scheduled execution with an explicit process-lifetime contract",
+      "acceptance": "Due-time tests with active and inactive process",
+      "verify": [
+        "IT"
+      ]
+    },
+    {
+      "id": "FLOW-09",
+      "priority": "SHOULD",
+      "source": "spec 14.4",
+      "text": "Versioned workflow migration strategy",
+      "acceptance": "Old in-flight run keeps its original definition",
+      "verify": [
+        "UT"
+      ]
+    },
+    {
+      "id": "FLOW-10",
+      "priority": "MUST",
+      "source": "CR-07",
+      "text": "Consequential tools are two-phase: plan, then execute with plan_id and operation_id",
+      "acceptance": "Execute without a granted, unconsumed, hash-matching approval returns APPROVAL_REQUIRED or APPROVAL_INVALID",
+      "verify": [
+        "UT",
+        "ST"
+      ]
+    },
+    {
+      "id": "FLOW-11",
+      "priority": "MUST",
+      "source": "CR-11",
+      "text": "Two server processes sharing one home never execute the same step twice",
+      "acceptance": "Two-process race test with leases",
+      "verify": [
+        "IT"
+      ]
+    },
+    {
+      "id": "SEC-01",
+      "priority": "MUST",
+      "source": "spec 14.5",
+      "text": "Encryption at rest and process-local least privilege",
+      "acceptance": "DB scan cannot find known tokens",
+      "verify": [
+        "ST"
+      ]
+    },
+    {
+      "id": "SEC-02",
+      "priority": "MUST",
+      "source": "spec 14.5",
+      "text": "Distinct MCP, provider and operation authorization boundaries",
+      "acceptance": "Token audience and account confusion tests",
+      "verify": [
+        "ST"
+      ]
+    },
+    {
+      "id": "SEC-03",
+      "priority": "MUST",
+      "source": "spec 14.5",
+      "text": "Untrusted provider content never becomes an executable instruction",
+      "acceptance": "Prompt-injection fixture cannot trigger a write",
+      "verify": [
+        "ST"
+      ]
+    },
+    {
+      "id": "SEC-04",
+      "priority": "MUST",
+      "source": "spec 14.5",
+      "text": "Local file and media upload sandbox",
+      "acceptance": "Traversal, symlink, huge-file and URL SSRF tests",
+      "verify": [
+        "ST"
+      ]
+    },
+    {
+      "id": "SEC-05",
+      "priority": "MUST",
+      "source": "spec 14.5",
+      "text": "Policy compliance and unsupported-feature reporting",
+      "acceptance": "Stage-0 per-provider review signed off",
+      "verify": [
+        "MR"
+      ]
+    },
+    {
+      "id": "SEC-06",
+      "priority": "MUST",
+      "source": "spec 14.5",
+      "text": "Full credential redaction on stderr and MCP output",
+      "acceptance": "Canary leak scan",
+      "verify": [
+        "ST"
+      ]
+    },
+    {
+      "id": "SEC-07",
+      "priority": "SHOULD",
+      "source": "spec 14.5",
+      "text": "Configurable local data retention, purge and backup",
+      "acceptance": "Retention and delete verification",
+      "verify": [
+        "IT"
+      ]
+    },
+    {
+      "id": "PERF-01",
+      "priority": "MUST",
+      "source": "spec 14.5",
+      "text": "All reads paginated and bounded",
+      "acceptance": "Huge provider payload never unbounded in one call",
+      "verify": [
+        "BT"
+      ]
+    },
+    {
+      "id": "PERF-02",
+      "priority": "MUST",
+      "source": "spec 14.5",
+      "text": "compact, standard and detailed projections",
+      "acceptance": "Snapshot and schema tests",
+      "verify": [
+        "CT"
+      ]
+    },
+    {
+      "id": "PERF-03",
+      "priority": "MUST",
+      "source": "spec 14.5",
+      "text": "Benchmark total tokens per successful task",
+      "acceptance": "Reproducible fixture, tokenizer version, results",
+      "verify": [
+        "BT"
+      ]
+    },
+    {
+      "id": "PERF-04",
+      "priority": "MUST",
+      "source": "spec 14.5",
+      "text": "Rate-limit and paid-operation budget enforcement",
+      "acceptance": "Mock quota or cost exhaustion blocks calls",
+      "verify": [
+        "UT"
+      ]
+    },
+    {
+      "id": "PERF-05",
+      "priority": "SHOULD",
+      "source": "spec 14.5",
+      "text": "Cached capability resolution with correct invalidation",
+      "acceptance": "Cache hit and stale-permission tests",
+      "verify": [
+        "UT",
+        "BT"
+      ]
+    },
+    {
+      "id": "PERF-06",
+      "priority": "SHOULD",
+      "source": "spec 14.5",
+      "text": "Resource-ref based large result retrieval",
+      "acceptance": "Ref expiration and access isolation tests",
+      "verify": [
+        "CT"
+      ]
+    },
+    {
+      "id": "OPS-01",
+      "priority": "MUST",
+      "source": "spec 14.5",
+      "text": "Health reports vault, provider and workflow readiness",
+      "acceptance": "One failing provider does not mark all healthy",
+      "verify": [
+        "IT"
+      ]
+    },
+    {
+      "id": "OPS-02",
+      "priority": "MUST",
+      "source": "spec 14.5",
+      "text": "No secret-containing audit or diagnostic exports",
+      "acceptance": "Scrubbed export static and dynamic checks",
+      "verify": [
+        "ST"
+      ]
+    },
+    {
+      "id": "OPS-03",
+      "priority": "MUST",
+      "source": "spec 14.5",
+      "text": "Migration rollback or recovery process",
+      "acceptance": "Simulated migration failure recovers without secret loss",
+      "verify": [
+        "IT"
+      ]
+    },
+    {
+      "id": "OPS-04",
+      "priority": "SHOULD",
+      "source": "spec 14.5",
+      "text": "Graceful SIGINT/SIGTERM with checkpointed pending operations",
+      "acceptance": "Forced and clean shutdown comparison",
+      "verify": [
+        "IT"
+      ]
+    },
+    {
+      "id": "INT-01",
+      "priority": "MUST",
+      "source": "CR-18",
+      "text": "XN-Bridge resolves every social.* capability to an accepted xn-interact tool contract",
+      "acceptance": "capability_resolve returns xn-interact as selected for each social.* capability",
+      "verify": [
+        "IT"
+      ]
+    },
+    {
+      "id": "INT-02",
+      "priority": "MUST",
+      "source": "CR-18",
+      "text": "XN-Bridge risk rules classify each xn-interact tool exactly as plan/catalog.json, with fail-closed default",
+      "acceptance": "Bridge classifier test over all 22 tools plus an unknown tool",
+      "verify": [
+        "UT"
+      ]
+    },
+    {
+      "id": "INT-03",
+      "priority": "MUST",
+      "source": "CR-19",
+      "text": "XN-Interact never treats a bridge approval or bridge unattended mode as authorization for a social write",
+      "acceptance": "Execute with only a bridge approval or with bridge autonomy on returns APPROVAL_REQUIRED",
+      "verify": [
+        "ST"
+      ]
+    },
+    {
+      "id": "INT-04",
+      "priority": "MUST",
+      "source": "CR-18",
+      "text": "Every XN-Interact error code and run terminal state maps to a bridge error_class and outcome",
+      "acceptance": "Mapping table test; errors carry bridge_error_class",
+      "verify": [
+        "CT"
+      ]
+    },
+    {
+      "id": "INT-05",
+      "priority": "MUST",
+      "source": "CR-18",
+      "text": "XN-Bridge social domain, route_intent rules and xn-social host skill",
+      "acceptance": "route_intent sends social requests to domain social without stealing career requests",
+      "verify": [
+        "UT"
+      ]
+    },
+    {
+      "id": "INT-06",
+      "priority": "MUST",
+      "source": "CR-18",
+      "text": "Host-mediated end-to-end flow across XN-Bridge and XN-Interact",
+      "acceptance": "Fixture then real provider: route, workflow, plan, approvals, execute, evidence, execution_record, checkpoint, complete",
+      "verify": [
+        "IT"
+      ]
+    },
+    {
+      "id": "INT-07",
+      "priority": "MUST",
+      "source": "CR-19",
+      "text": "Bridge approval convention binds the XN-Interact plan hash and a valid https target",
+      "acceptance": "Bridge approval payload contains plan_id and plan_hash; changed plan invalidates both approvals",
+      "verify": [
+        "ST"
+      ]
+    },
+    {
+      "id": "INT-08",
+      "priority": "SHOULD",
+      "source": "CR-20",
+      "text": "XN-Bridge unattended autonomy scoped to career capabilities so social.* never runs unattended",
+      "acceptance": "Bridge test: social.* begin without approval refused while autonomy is on",
+      "verify": [
+        "UT"
+      ]
+    },
+    {
+      "id": "INT-09",
+      "priority": "MUST",
+      "source": "CR-18",
+      "text": "Host registration for Claude Code and Codex with backup and documented rollback",
+      "acceptance": "Both hosts list xn-interact; rollback steps rehearsed",
+      "verify": [
+        "IT",
+        "MR"
+      ]
+    },
+    {
+      "id": "INT-10",
+      "priority": "COULD",
+      "source": "CR-19",
+      "text": "Approval federation: one human decision verifiable by both servers",
+      "acceptance": "Threat model approved before any implementation",
+      "verify": [
+        "MR"
+      ]
+    },
+    {
+      "id": "INT-11",
+      "priority": "SHOULD",
+      "source": "CR-18",
+      "text": "Restart and resume across both servers reconcile unknown outcomes consistently",
+      "acceptance": "Kill during execute; bridge OUTCOME_UNKNOWN and xn-interact unknown_outcome reconcile through ops.recover",
+      "verify": [
+        "IT"
+      ]
+    },
+    {
+      "id": "INT-12",
+      "priority": "SHOULD",
+      "source": "owner request 2026-11-19, CR-29",
+      "text": "One dynamic XN-Bridge router covers every registered domain and capability, loaded from code, defaults and local config, with live provider selection",
+      "acceptance": "Dev and held-out routing sets keep 0 confident errors; a capability or intent added in config routes without code changes",
+      "verify": [
+        "UT",
+        "BT"
+      ]
+    }
+  ]
+}

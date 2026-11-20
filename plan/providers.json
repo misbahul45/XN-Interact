@@ -1,0 +1,433 @@
+{
+  "version": 1,
+  "policy": "Every field stays UNVERIFIED until an official source and a proof test exist. UNVERIFIED operations resolve to capability state UNVERIFIED and write capability stays disabled.",
+  "evidence_fields": [
+    "app_registration",
+    "app_type",
+    "user_grant_type",
+    "accepted_callback",
+    "pkce",
+    "scopes",
+    "identity_endpoint",
+    "refresh_revoke",
+    "account_class",
+    "app_review_state",
+    "rate_limits",
+    "cost_rules",
+    "automation_policy"
+  ],
+  "operation_verdicts": [
+    "UNVERIFIED",
+    "VERIFIED",
+    "UNSUPPORTED",
+    "MANUAL_ONLY",
+    "PROHIBITED",
+    "APP_APPROVAL_REQUIRED"
+  ],
+  "rows": [
+    {
+      "provider": "linkedin",
+      "evidence_task": "P0-07",
+      "spec_reference_urls": [
+        "https://learn.microsoft.com/en-us/linkedin/shared/authentication/getting-access"
+      ],
+      "spec_concern": "Product-specific scopes, restricted member reads and organization APIs; no claim of messaging or unrestricted search.",
+      "fields": {
+        "app_registration": "Developer Portal app; add the Share on LinkedIn product (self-serve per the Share page; approval timing not stated)",
+        "app_type": "web app with client secret in the token request body",
+        "user_grant_type": "authorization code (3-legged)",
+        "accepted_callback": "HTTPS absolute URL registered in the portal; loopback http not documented",
+        "pkce": "NOT_STATED (an error message mentions a code verifier)",
+        "scopes": "w_member_social (post); profile scopes depend on Products; other read and engagement scopes NOT_READ",
+        "identity_endpoint": "Person URN via Sign In with LinkedIn using OpenID Connect (page not read)",
+        "refresh_revoke": "access token 60 days; programmatic refresh only for a limited set of partners; revoke NOT_STATED",
+        "account_class": "member; organization products NOT_READ",
+        "app_review_state": "NOT_STATED (product add is described as self-serve)",
+        "rate_limits": "member 150/day, application 100,000/day (UTC) on the Share page",
+        "cost_rules": "none stated",
+        "automation_policy": "NOT_READ"
+      },
+      "operations": {
+        "auth.revoke": "UNVERIFIED",
+        "account.read": "UNVERIFIED",
+        "content.read": "UNVERIFIED",
+        "content.publish.text": "UNVERIFIED",
+        "content.publish.image": "UNVERIFIED",
+        "content.publish.video": "UNVERIFIED",
+        "content.update": "UNVERIFIED",
+        "content.delete": "UNVERIFIED",
+        "engagement.read": "UNVERIFIED",
+        "engagement.reply": "UNVERIFIED",
+        "engagement.react": "UNVERIFIED",
+        "engagement.hide": "UNVERIFIED",
+        "search.content": "UNVERIFIED",
+        "analytics.read": "UNVERIFIED",
+        "media.upload": "UNVERIFIED",
+        "reconcile.read": "UNVERIFIED"
+      },
+      "verified_date": "2026-11-20",
+      "proof_test": null
+    },
+    {
+      "provider": "instagram",
+      "evidence_task": "P0-08",
+      "spec_reference_urls": [
+        "https://developers.facebook.com/documentation/instagram-platform/overview",
+        "https://developers.facebook.com/documentation/instagram-platform/instagram-api-with-unified-login/get-started",
+        "https://developers.facebook.com/documentation/instagram-platform/instagram-api-with-unified-login/authentication"
+      ],
+      "spec_concern": "New Meta apps are offered only the Unified Login setup (Facebook Login for Business with a config_id); Instagram Login and Facebook Login are separate setups with different hosts, tokens and permission names. A business portfolio owns the app. Publishing needs a public media URL.",
+      "fields": {
+        "app_registration": "Meta app with the Manage messaging & content on Instagram use case, owned by a business portfolio; a login configuration gives the config_id",
+        "app_type": "business portfolio owned app using Facebook Login for Business; token request uses the Meta app id and secret",
+        "user_grant_type": "authorization code via https://www.facebook.com/dialog/oauth with client_id, config_id, redirect_uri, response_type=code",
+        "accepted_callback": "HTTPS redirect URL saved in the configuration; loopback NOT_STATED",
+        "pkce": "NOT_STATED",
+        "scopes": "set by the configuration: instagram_basic (required), instagram_manage_messages (required in the default configuration), instagram_manage_comments, instagram_content_publish, instagram_manage_insights, ads_management, ads_read",
+        "identity_endpoint": "GET /me/assigned_instagram_accounts?fields=id,username (needs instagram_basic); /me?fields=client_business_id",
+        "refresh_revoke": "business system user token; expiry chosen in the configuration; refresh through the Business Integration System User Access Token Management API; NOT_READ for revoke",
+        "account_class": "professional (business or creator); a Facebook Page is not required; test users are not supported",
+        "app_review_state": "Standard Access is enough for accounts that have a role on the app; Advanced Access and Business Verification only for other people's accounts",
+        "rate_limits": "100 API-published posts per 24h moving period (carousel section says 50)",
+        "cost_rules": "none stated",
+        "automation_policy": "NOT_READ"
+      },
+      "operations": {
+        "auth.revoke": "UNVERIFIED",
+        "account.read": "UNVERIFIED",
+        "content.read": "UNVERIFIED",
+        "content.publish.text": "UNVERIFIED",
+        "content.publish.image": "UNVERIFIED",
+        "content.publish.video": "UNVERIFIED",
+        "content.update": "UNVERIFIED",
+        "content.delete": "UNVERIFIED",
+        "engagement.read": "UNVERIFIED",
+        "engagement.reply": "UNVERIFIED",
+        "engagement.react": "UNVERIFIED",
+        "engagement.hide": "UNVERIFIED",
+        "search.content": "UNVERIFIED",
+        "analytics.read": "UNVERIFIED",
+        "media.upload": "UNVERIFIED",
+        "reconcile.read": "UNVERIFIED"
+      },
+      "verified_date": "2026-11-20",
+      "proof_test": null
+    },
+    {
+      "provider": "tiktok",
+      "evidence_task": "P0-09",
+      "spec_reference_urls": [
+        "https://developers.tiktok.com/docs/en/content-posting-api-get-started"
+      ],
+      "spec_concern": "Public Direct Post needs audit; creator-info and privacy restrictions; asynchronous publish.",
+      "fields": {
+        "app_registration": "TikTok for Developers app; video.publish needs approval",
+        "app_type": "desktop (loopback redirect) per Login Kit for desktop",
+        "user_grant_type": "authorization code with PKCE",
+        "accepted_callback": "http://localhost or http://127.0.0.1 with a port, static, registered in Login Kit (desktop)",
+        "pkce": "required for desktop; S256 only; challenge is hex-encoded SHA256",
+        "scopes": "video.publish (direct post); user.info.basic in the example; full list NOT_READ",
+        "identity_endpoint": "NOT_READ",
+        "refresh_revoke": "access token 2h; refresh token 180 days; endpoints NOT_READ",
+        "account_class": "creator account; creator info must be queried before posting",
+        "app_review_state": "unaudited clients: private viewing only; audit needed for public posts",
+        "rate_limits": "NOT_STATED on the pages read",
+        "cost_rules": "none stated",
+        "automation_policy": "NOT_READ"
+      },
+      "operations": {
+        "content.publish.video": "APP_APPROVAL_REQUIRED",
+        "auth.revoke": "UNVERIFIED",
+        "account.read": "UNVERIFIED",
+        "content.read": "UNVERIFIED",
+        "content.publish.text": "UNVERIFIED",
+        "content.publish.image": "UNVERIFIED",
+        "content.update": "UNVERIFIED",
+        "content.delete": "UNVERIFIED",
+        "engagement.read": "UNVERIFIED",
+        "engagement.reply": "UNVERIFIED",
+        "engagement.react": "UNVERIFIED",
+        "engagement.hide": "UNVERIFIED",
+        "search.content": "UNVERIFIED",
+        "analytics.read": "UNVERIFIED",
+        "media.upload": "UNVERIFIED",
+        "reconcile.read": "UNVERIFIED"
+      },
+      "verified_date": "2026-11-20",
+      "proof_test": null
+    },
+    {
+      "provider": "x",
+      "evidence_task": "P0-10",
+      "spec_reference_urls": [
+        "https://docs.x.com/"
+      ],
+      "spec_concern": "Paid API and automation limits; a cost gate applies to every operation with charges; no hardcoded unit prices.",
+      "fields": {
+        "app_registration": "Developer Console app with prepaid credits",
+        "app_type": "NOT_READ",
+        "user_grant_type": "authorization code with PKCE parameters",
+        "accepted_callback": "exact match against app settings; localhost NOT_STATED",
+        "pkce": "code_challenge parameters listed; mandatory-ness NOT_STATED",
+        "scopes": "users.read, tweet.read, tweet.write, like.read, like.write, follows.read, users.email, offline.access; delete mapping NOT_READ",
+        "identity_endpoint": "NOT_READ",
+        "refresh_revoke": "access token 2h; refresh token only with offline.access; revoke NOT_STATED",
+        "account_class": "NOT_READ",
+        "app_review_state": "NOT_STATED",
+        "rate_limits": "3 million post reads per billing cycle on pay-per-usage",
+        "cost_rules": "pay-per-usage: $0.015 post, $0.200 post with URL, $0.005 post read (page read 2026-11-19..20; configure, do not hardcode)",
+        "automation_policy": "NOT_STATED on the pages read"
+      },
+      "operations": {
+        "auth.revoke": "UNVERIFIED",
+        "account.read": "UNVERIFIED",
+        "content.read": "UNVERIFIED",
+        "content.publish.text": "UNVERIFIED",
+        "content.publish.image": "UNVERIFIED",
+        "content.publish.video": "UNVERIFIED",
+        "content.update": "UNVERIFIED",
+        "content.delete": "UNVERIFIED",
+        "engagement.read": "UNVERIFIED",
+        "engagement.reply": "UNVERIFIED",
+        "engagement.react": "UNVERIFIED",
+        "engagement.hide": "UNVERIFIED",
+        "search.content": "UNVERIFIED",
+        "analytics.read": "UNVERIFIED",
+        "media.upload": "UNVERIFIED",
+        "reconcile.read": "UNVERIFIED"
+      },
+      "verified_date": "2026-11-20",
+      "proof_test": null
+    },
+    {
+      "provider": "threads",
+      "evidence_task": "P0-11",
+      "spec_reference_urls": [
+        "https://developers.facebook.com/documentation/threads/overview"
+      ],
+      "spec_concern": "Scope and app-review limits; container publishing.",
+      "fields": {
+        "app_registration": "Meta app with the Threads product; tester role for own accounts",
+        "app_type": "web app with client secret in the token request body",
+        "user_grant_type": "authorization code",
+        "accepted_callback": "exact match to a registered URI; HTTPS in examples; loopback NOT_STATED",
+        "pkce": "NOT_STATED",
+        "scopes": "threads_basic, threads_content_publish, threads_manage_replies, threads_read_replies, threads_manage_insights",
+        "identity_endpoint": "NOT_READ",
+        "refresh_revoke": "short-lived 1h; long-lived 60 days; refresh via GET /refresh_access_token; revoke NOT_READ",
+        "account_class": "Threads profile",
+        "app_review_state": "App Review needed for users without an app role; testers need none",
+        "rate_limits": "250 published posts per rolling 24h",
+        "cost_rules": "none stated",
+        "automation_policy": "NOT_READ"
+      },
+      "operations": {
+        "auth.revoke": "UNVERIFIED",
+        "account.read": "UNVERIFIED",
+        "content.read": "UNVERIFIED",
+        "content.publish.text": "UNVERIFIED",
+        "content.publish.image": "UNVERIFIED",
+        "content.publish.video": "UNVERIFIED",
+        "content.update": "UNVERIFIED",
+        "content.delete": "UNVERIFIED",
+        "engagement.read": "UNVERIFIED",
+        "engagement.reply": "UNVERIFIED",
+        "engagement.react": "UNVERIFIED",
+        "engagement.hide": "UNVERIFIED",
+        "search.content": "UNVERIFIED",
+        "analytics.read": "UNVERIFIED",
+        "media.upload": "UNVERIFIED",
+        "reconcile.read": "UNVERIFIED"
+      },
+      "verified_date": "2026-11-20",
+      "proof_test": null
+    },
+    {
+      "provider": "reddit",
+      "evidence_task": "P0-12",
+      "spec_reference_urls": [
+        "https://redditinc.com/policies/developer-terms"
+      ],
+      "spec_concern": "Responsible Builder and Developer Platform access restrictions; subreddit-specific rules; OAuth consent is not proof of app approval.",
+      "fields": {
+        "app_registration": "NOT_READ (current policy unreadable)",
+        "app_type": "web, installed or script (archived wiki)",
+        "user_grant_type": "authorization code (permanent duration for refresh)",
+        "accepted_callback": "exact match to the registered URI; localhost NOT_STATED",
+        "pkce": "NOT_STATED",
+        "scopes": "identity, submit, read, edit, vote, history, mysubreddits (archived wiki)",
+        "identity_endpoint": "NOT_READ",
+        "refresh_revoke": "refresh via grant_type=refresh_token; revoke_token endpoint (archived wiki)",
+        "account_class": "NOT_READ",
+        "app_review_state": "UNKNOWN: Responsible Builder policy unreadable",
+        "rate_limits": "NOT_READ",
+        "cost_rules": "NOT_READ",
+        "automation_policy": "UNKNOWN: developer terms unreadable"
+      },
+      "operations": {
+        "auth.revoke": "UNVERIFIED",
+        "account.read": "UNVERIFIED",
+        "content.read": "UNVERIFIED",
+        "content.publish.text": "UNVERIFIED",
+        "content.publish.image": "UNVERIFIED",
+        "content.publish.video": "UNVERIFIED",
+        "content.update": "UNVERIFIED",
+        "content.delete": "UNVERIFIED",
+        "engagement.read": "UNVERIFIED",
+        "engagement.reply": "UNVERIFIED",
+        "engagement.react": "UNVERIFIED",
+        "engagement.hide": "UNVERIFIED",
+        "search.content": "UNVERIFIED",
+        "analytics.read": "UNVERIFIED",
+        "media.upload": "UNVERIFIED",
+        "reconcile.read": "UNVERIFIED"
+      },
+      "verified_date": "2026-11-20",
+      "proof_test": null
+    },
+    {
+      "provider": "facebook",
+      "evidence_task": "P0-13",
+      "spec_reference_urls": [
+        "https://developers.facebook.com/docs/graph-api/"
+      ],
+      "spec_concern": "Page role and permissions; no unrestricted personal-profile posting; Meta review.",
+      "fields": {
+        "app_registration": "Meta app with Facebook Login and Pages permissions",
+        "app_type": "NOT_READ",
+        "user_grant_type": "Facebook Login, then a Page access token",
+        "accepted_callback": "NOT_STATED",
+        "pkce": "NOT_STATED",
+        "scopes": "pages_manage_posts, pages_manage_engagement, pages_read_engagement, pages_read_user_engagement, publish_video",
+        "identity_endpoint": "NOT_READ",
+        "refresh_revoke": "NOT_STATED",
+        "account_class": "Page; user needs CREATE_CONTENT, MANAGE and MODERATE tasks",
+        "app_review_state": "NOT_STATED for these permissions",
+        "rate_limits": "NOT_STATED",
+        "cost_rules": "none stated",
+        "automation_policy": "NOT_READ"
+      },
+      "operations": {
+        "auth.revoke": "UNVERIFIED",
+        "account.read": "UNVERIFIED",
+        "content.read": "UNVERIFIED",
+        "content.publish.text": "UNVERIFIED",
+        "content.publish.image": "UNVERIFIED",
+        "content.publish.video": "UNVERIFIED",
+        "content.update": "UNVERIFIED",
+        "content.delete": "UNVERIFIED",
+        "engagement.read": "UNVERIFIED",
+        "engagement.reply": "UNVERIFIED",
+        "engagement.react": "UNVERIFIED",
+        "engagement.hide": "UNVERIFIED",
+        "search.content": "UNVERIFIED",
+        "analytics.read": "UNVERIFIED",
+        "media.upload": "UNVERIFIED",
+        "reconcile.read": "UNVERIFIED"
+      },
+      "verified_date": "2026-11-20",
+      "proof_test": null
+    }
+  ],
+  "conflicts": [
+    {
+      "id": "SC-01",
+      "providers": [
+        "instagram"
+      ],
+      "text": "One source calls text posts supported, another flags media constraints. Verify each post type and account eligibility.",
+      "resolved_by": "P0-08",
+      "status": "RESOLVED",
+      "resolution": "Instagram official docs: a container needs image_url or video_url and text-only posts are not mentioned, so publish.text stays UNVERIFIED and no 'post = yes' is advertised."
+    },
+    {
+      "id": "SC-02",
+      "providers": [
+        "linkedin",
+        "instagram",
+        "tiktok",
+        "x",
+        "threads",
+        "reddit",
+        "facebook"
+      ],
+      "text": "Edit and delete matrices conflict. Verify endpoint and entitlement before advertising update/delete.",
+      "resolved_by": "P8-09",
+      "status": "OPEN",
+      "resolution": "P0 evidence found no documented edit or delete endpoint for LinkedIn, Instagram, TikTok, Threads or X on the pages read; Facebook delete is not mapped. update/delete stay UNVERIFIED everywhere until the per-provider coverage report (P8-09)."
+    },
+    {
+      "id": "SC-03",
+      "providers": [
+        "x"
+      ],
+      "text": "Pricing and follow/like/reply policy conflict. Re-check the official API and policy console on implementation date.",
+      "resolved_by": "P8-04",
+      "status": "OPEN",
+      "resolution": "X pricing was read (pay-per-usage, dated in docs/providers/x.md); the automation policy, developer agreement and follow/like/reply restrictions were not on the pages read and are settled when the X adapter is built."
+    },
+    {
+      "id": "SC-04",
+      "providers": [
+        "reddit"
+      ],
+      "text": "API, Devvit and Responsible Builder availability differ. Ordinary OAuth consent is insufficient proof of app approval.",
+      "resolved_by": "P8-06",
+      "status": "OPEN",
+      "resolution": "Reddit policy pages were unreadable (HTTP 403 and refused domain), so API approval and automation rules are unknown; settled when the Reddit adapter is built, with the owner reading the policy in a browser."
+    },
+    {
+      "id": "SC-05",
+      "providers": [
+        "tiktok"
+      ],
+      "text": "Public visibility, creator info, local callback and audit requirements depend on product and app type.",
+      "resolved_by": "P0-09",
+      "status": "RESOLVED",
+      "resolution": "TikTok docs: unaudited clients post privately only, creator info must be queried first, loopback redirects are allowed for the desktop app type (port required), publishing is asynchronous."
+    },
+    {
+      "id": "SC-06",
+      "providers": [
+        "linkedin"
+      ],
+      "text": "Writable member posts differ from read/comment endpoints and organization products. Read scopes cannot be inferred from write scopes.",
+      "resolved_by": "P0-07",
+      "status": "RESOLVED",
+      "resolution": "LinkedIn: w_member_social covers creating posts only; read, comment and organization endpoints were not read and stay UNVERIFIED, nothing is inferred from write scopes."
+    },
+    {
+      "id": "SC-07",
+      "providers": [
+        "instagram",
+        "threads",
+        "facebook"
+      ],
+      "text": "Instagram Login, Instagram via Facebook Login, Threads OAuth and Facebook Page tokens are separate contexts.",
+      "resolved_by": "P0-13",
+      "status": "RESOLVED",
+      "resolution": "Meta: Facebook Pages use a Page access token from Facebook Login, Instagram uses Instagram Login scopes, Threads has its own authorization window and token exchange; adapters keep the contexts separate."
+    },
+    {
+      "id": "SC-08",
+      "providers": [],
+      "text": "Sources mix 2025 session semantics with 2026 stateless semantics. Verify negotiated revision before using Mcp-Session-Id, Tasks or elicitation.",
+      "resolved_by": "P0-04",
+      "status": "RESOLVED"
+    },
+    {
+      "id": "SC-09",
+      "providers": [],
+      "text": "Earlier research preferred Node. Run SDK v2 stdio and optional extensions under Bun before release.",
+      "resolved_by": "P0-04",
+      "status": "RESOLVED"
+    },
+    {
+      "id": "SC-10",
+      "providers": [],
+      "text": "Some sources expose an AI-callable approval method. Replaced by a trusted-human CLI approval; no confirm tool exists in the catalog.",
+      "resolved_by": "P0-01",
+      "status": "RESOLVED"
+    }
+  ]
+}

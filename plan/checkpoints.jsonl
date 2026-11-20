@@ -1,0 +1,238 @@
+{"at":"2026-11-19T13:24:01.017Z","task":"P0-01","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:24:01.068Z","task":"P0-01","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["docs/plan/consistency-review.md"],"note":"CR-01..CR-26 with enforcement points"}
+{"at":"2026-11-19T13:24:01.122Z","task":"P0-03","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:24:01.170Z","task":"P0-03","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["docs/plan/xn-bridge-integration.md","plan/bridge.json"],"note":"bridge contract validated by checker against catalog and observed XN-Bridge source"}
+{"at":"2026-11-19T13:24:10.100Z","task":"P0-02","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:24:10.143Z","task":"P0-02","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["bun run plan:check: 0 errors","tests/plan/plan.test.ts"],"note":"checker plus 24 negative tests"}
+{"at":"2026-11-19T13:24:10.187Z","task":"P0-18","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:24:10.226Z","task":"P0-18","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["git rev-parse --is-inside-work-tree: true; data/ ignored"],"note":"no commit made"}
+{"at":"2026-11-19T13:26:51.000Z","task":"P0-04","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:26:51.062Z","task":"P0-04","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["docs/evidence/mcp-bun-compat.md","spikes/mcp-stdio/probe.ts"],"note":"SDK 2.4.0 stdio under Bun 1.4.0; negotiated 2025-11-25"}
+{"at":"2026-11-19T13:27:29.232Z","task":"P0-06","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:27:29.282Z","task":"P0-06","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["docs/evidence/bun-secrets.md","spikes/secrets/probe.ts"],"note":"works with session bus; throws without one"}
+{"at":"2026-11-19T13:28:56.168Z","task":"P0-05","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:28:56.219Z","task":"P0-05","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["docs/evidence/host-tool-names.md","spikes/host-names/codex-probe.ts"],"note":"Codex lists both; Claude API forbids dots; snake_case satisfies both"}
+{"at":"2026-11-19T13:29:08.262Z","task":"P0-17","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:29:08.309Z","task":"P0-17","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["docs/adr/README.md"],"note":"ADR-019..027 accepted after P0-04/05/06"}
+{"at":"2026-11-19T13:29:34.147Z","task":"P0-14","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:29:34.198Z","task":"P0-14","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["docs/threat-model.md"],"note":"22 threats mapped to requirements and tasks"}
+{"at":"2026-11-19T13:58:16.729Z","task":"P1-01","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:16.770Z","task":"P1-01","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["bun test: 102 pass, 0 fail (2026-11-19)","package.json","bun.lock"],"note":"pinned @modelcontextprotocol/server 2.4.0, zod 4.6.7"}
+{"at":"2026-11-19T13:58:16.812Z","task":"P1-02","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:16.850Z","task":"P1-02","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["src/bootstrap/config.ts","tests/contract/stdio.test.ts"],"note":"config validated; diagnostics on stderr only"}
+{"at":"2026-11-19T13:58:16.891Z","task":"P1-03","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:16.933Z","task":"P1-03","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/contract/catalog-drift.test.ts"],"note":"contracts read plan/catalog.json; drift test"}
+{"at":"2026-11-19T13:58:16.976Z","task":"P1-04","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:17.017Z","task":"P1-04","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/contract/stdio.test.ts","docs/evidence/codex-smoke.json"],"note":"22 tools equal catalog; stubs replaced by real handlers"}
+{"at":"2026-11-19T13:58:17.058Z","task":"P1-05","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:17.096Z","task":"P1-05","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/unit/profiles.test.ts"],"note":"compact/standard/detailed; bug in compact projection found and fixed"}
+{"at":"2026-11-19T13:58:17.136Z","task":"P1-06","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:17.173Z","task":"P1-06","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/contract/stdio.test.ts"],"note":"9 resources, 4 prompts"}
+{"at":"2026-11-19T13:58:17.212Z","task":"P1-07","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:17.252Z","task":"P1-07","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/contract/stdio.test.ts"],"note":"1,000 calls via official SDK client; MCP Inspector not run"}
+{"at":"2026-11-19T13:58:17.290Z","task":"P1-08","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:17.331Z","task":"P1-08","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/unit/capabilities.test.ts"],"note":"per-provider health; circuit isolates one provider"}
+{"at":"2026-11-19T13:58:17.371Z","task":"P1-09","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:17.411Z","task":"P1-09","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/security/static-guards.test.ts"]}
+{"at":"2026-11-19T13:58:17.451Z","task":"P1-10","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:17.490Z","task":"P1-10","from":"IN_PROGRESS","to":"BLOCKED","actor":"agent","evidence":["docs/evidence/host-smoke.md"],"blocker":"Claude Code project server awaits owner approval (run claude in the repo and approve xn-interact); Codex verified"}
+{"at":"2026-11-19T13:58:31.285Z","task":"P2-01","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:31.323Z","task":"P2-01","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["src/storage/db.ts","tests/unit/storage.test.ts"],"note":"WAL, foreign keys, busy timeout, immediate transactions"}
+{"at":"2026-11-19T13:58:31.366Z","task":"P2-02","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:31.415Z","task":"P2-02","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/unit/storage.test.ts","tests/contract/catalog-drift.test.ts"],"note":"checksums, rollback on failure, tables equal catalog"}
+{"at":"2026-11-19T13:58:31.459Z","task":"P2-03","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:31.499Z","task":"P2-03","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/unit/vault.test.ts","tests/security/canary.test.ts"],"note":"AES-256-GCM with AAD; key rotation"}
+{"at":"2026-11-19T13:58:31.540Z","task":"P2-04","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:31.587Z","task":"P2-04","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/unit/vault.test.ts"],"note":"keyring failure locks; no plaintext fallback"}
+{"at":"2026-11-19T13:58:31.638Z","task":"P2-05","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:31.676Z","task":"P2-05","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/security/canary.test.ts"],"note":"canary absent from outputs, logs, audit, db and WAL"}
+{"at":"2026-11-19T13:58:31.718Z","task":"P2-06","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:31.759Z","task":"P2-06","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/unit/transport.test.ts"]}
+{"at":"2026-11-19T13:58:31.798Z","task":"P2-07","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:31.839Z","task":"P2-07","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/security/sandbox.test.ts"]}
+{"at":"2026-11-19T13:58:31.880Z","task":"P2-08","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:31.920Z","task":"P2-08","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/workflow/recovery.test.ts"],"note":"two-process race executes each write once"}
+{"at":"2026-11-19T13:58:31.960Z","task":"P3-01","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:32.003Z","task":"P3-01","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/oauth/oauth.test.ts"],"note":"seven real profiles UNVERIFIED and refuse consent"}
+{"at":"2026-11-19T13:58:32.046Z","task":"P3-02","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:32.089Z","task":"P3-02","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/oauth/oauth.test.ts"]}
+{"at":"2026-11-19T13:58:32.131Z","task":"P3-03","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:32.172Z","task":"P3-03","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/oauth/oauth.test.ts"],"note":"host, path, state, replay and expiry checks"}
+{"at":"2026-11-19T13:58:32.216Z","task":"P3-04","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:32.260Z","task":"P3-04","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/oauth/oauth.test.ts"],"note":"two identities isolated; partial consent MISSING_SCOPES"}
+{"at":"2026-11-19T13:58:32.303Z","task":"P3-05","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:32.348Z","task":"P3-05","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/oauth/oauth.test.ts"],"note":"20 concurrent reads, 1 refresh"}
+{"at":"2026-11-19T13:58:32.392Z","task":"P3-06","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:32.436Z","task":"P3-06","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/oauth/oauth.test.ts"]}
+{"at":"2026-11-19T13:58:32.489Z","task":"P3-07","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:32.529Z","task":"P3-07","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/contract/lifecycle.test.ts"],"note":"hidden TTY entry; no tool accepts credentials"}
+{"at":"2026-11-19T13:58:32.569Z","task":"P3-08","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:32.608Z","task":"P3-08","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/oauth/oauth.test.ts"]}
+{"at":"2026-11-19T13:58:32.650Z","task":"P4-01","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:32.688Z","task":"P4-01","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/unit/capabilities.test.ts"]}
+{"at":"2026-11-19T13:58:32.729Z","task":"P4-02","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:32.771Z","task":"P4-02","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/unit/capabilities.test.ts"]}
+{"at":"2026-11-19T13:58:32.811Z","task":"P4-03","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:32.854Z","task":"P4-03","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/unit/capabilities.test.ts"],"note":"role and grant changes invalidate"}
+{"at":"2026-11-19T13:58:32.896Z","task":"P4-04","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:32.936Z","task":"P4-04","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/unit/capabilities.test.ts"],"note":"call and cost budgets deny before the request"}
+{"at":"2026-11-19T13:58:32.976Z","task":"P4-05","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:33.018Z","task":"P4-05","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/security/approvals.test.ts"],"note":"same inputs same hash; tamper detected"}
+{"at":"2026-11-19T13:58:33.059Z","task":"P4-06","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:33.099Z","task":"P4-06","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/security/approvals.test.ts","tests/contract/lifecycle.test.ts"],"note":"non-TTY approval refused"}
+{"at":"2026-11-19T13:58:33.139Z","task":"P4-07","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:33.180Z","task":"P4-07","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/security/approvals.test.ts"]}
+{"at":"2026-11-19T13:58:33.223Z","task":"P4-08","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:33.262Z","task":"P4-08","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/workflow/publish.test.ts","tests/workflow/recovery.test.ts"]}
+{"at":"2026-11-19T13:58:33.301Z","task":"P4-09","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:33.343Z","task":"P4-09","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/security/approvals.test.ts"]}
+{"at":"2026-11-19T13:58:33.385Z","task":"P4-10","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:33.425Z","task":"P4-10","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["src/providers/fixture/adapter.ts","tests/security/static-guards.test.ts"],"note":"refused outside XN_INTERACT_ENV=test"}
+{"at":"2026-11-19T13:58:47.799Z","task":"P6-01","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:58:47.842Z","task":"P6-01","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/workflow/publish.test.ts","tests/security/approvals.test.ts"]}
+{"at":"2026-11-19T13:58:47.881Z","task":"P6-02","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:59:00.481Z","task":"P6-02","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/unit/skills.test.ts"],"note":"code-bearing, misnamed, drifted and unknown manifests rejected"}
+{"at":"2026-11-19T13:59:00.523Z","task":"P6-03","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:59:00.563Z","task":"P6-03","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/unit/skills.test.ts"],"note":"all 12 route combinations resolve to one skill"}
+{"at":"2026-11-19T13:59:00.603Z","task":"P6-04","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:59:00.644Z","task":"P6-04","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/contract/catalog-drift.test.ts"]}
+{"at":"2026-11-19T13:59:00.688Z","task":"P6-05","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:59:00.732Z","task":"P6-05","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/contract/stdio.test.ts","tests/unit/profiles.test.ts"],"note":"result refs paged and expiring"}
+{"at":"2026-11-19T13:59:00.783Z","task":"P6-06","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:59:00.827Z","task":"P6-06","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/contract/stdio.test.ts"]}
+{"at":"2026-11-19T13:59:00.866Z","task":"P6-07","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:59:00.908Z","task":"P6-07","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/workflow/publish.test.ts","tests/security/sandbox.test.ts"]}
+{"at":"2026-11-19T13:59:00.951Z","task":"P6-08","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:59:00.995Z","task":"P6-08","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/security/approvals.test.ts","tests/contract/lifecycle.test.ts"],"note":"same plan hash; no MCP client in src"}
+{"at":"2026-11-19T13:59:01.037Z","task":"P6-09","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:59:01.080Z","task":"P6-09","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/oauth/oauth.test.ts"],"note":"UNVERIFIED with the evidence task to complete"}
+{"at":"2026-11-19T13:59:01.126Z","task":"P7-01","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:59:01.177Z","task":"P7-01","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/workflow/publish.test.ts"]}
+{"at":"2026-11-19T13:59:01.216Z","task":"P7-02","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:59:01.259Z","task":"P7-02","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/workflow/publish.test.ts"],"note":"partially_succeeded with per-target states"}
+{"at":"2026-11-19T13:59:01.300Z","task":"P7-03","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:59:01.343Z","task":"P7-03","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/workflow/publish.test.ts"],"note":"429 waits then retries the refused request; media container polling"}
+{"at":"2026-11-19T13:59:01.385Z","task":"P7-04","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:59:01.428Z","task":"P7-04","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/workflow/publish.test.ts"],"note":"lost response reconciled; unprovable stays unknown"}
+{"at":"2026-11-19T13:59:01.469Z","task":"P7-05","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:59:01.510Z","task":"P7-05","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/workflow/recovery.test.ts"],"note":"SIGKILL after apply recovered with one write"}
+{"at":"2026-11-19T13:59:01.556Z","task":"P7-06","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:59:01.599Z","task":"P7-06","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/workflow/publish.test.ts"]}
+{"at":"2026-11-19T13:59:01.638Z","task":"P7-08","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:59:01.678Z","task":"P7-08","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/workflow/recovery.test.ts"]}
+{"at":"2026-11-19T13:59:01.721Z","task":"P7-10","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:59:01.760Z","task":"P7-10","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/contract/lifecycle.test.ts"],"note":"SIGTERM exit 0, leases released; SIGKILL covered by P7-05"}
+{"at":"2026-11-19T13:59:01.799Z","task":"PB-01","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:59:09.792Z","task":"PB-01","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/contract/catalog-drift.test.ts"]}
+{"at":"2026-11-19T13:59:09.834Z","task":"PB-09","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:59:09.876Z","task":"PB-09","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/workflow/publish.test.ts","tests/security/approvals.test.ts"],"note":"meta.bridge outcome and error.bridge_error_class"}
+{"at":"2026-11-19T13:59:09.917Z","task":"P7-07","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T13:59:09.959Z","task":"P7-07","from":"IN_PROGRESS","to":"APPROVAL_REQUESTED","actor":"agent","evidence":["deploy/xn-interact-worker.service"],"note":"scheduler works while a process is alive; installing the systemd user unit needs owner approval"}
+{"at":"2026-11-19T14:37:25.453Z","task":"PB-02","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T14:37:25.507Z","task":"PB-02","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["host-skills/xn-social/SKILL.md"],"note":"linked into XN-Bridge .claude/skills and .agents/skills"}
+{"at":"2026-11-19T14:37:25.562Z","task":"PB-04","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T14:37:25.648Z","task":"PB-04","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["XN-Bridge pytest: 436 unit+security passed; 23 integration/e2e passed, 6 skipped (2026-11-19)","~/code/XN-Bridge/tests/unit/test_social.py"],"note":"20 social.* capabilities generated from plan/bridge.json by scripts/bridge-export.ts"}
+{"at":"2026-11-19T14:37:25.698Z","task":"PB-05","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T14:37:25.749Z","task":"PB-05","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["~/code/XN-Bridge/tests/unit/test_social.py"],"note":"22 exact rules + fail-closed default; classifier test"}
+{"at":"2026-11-19T14:37:25.806Z","task":"PB-07","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T14:37:25.853Z","task":"PB-07","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["~/code/XN-Bridge/tests/unit/test_social.py"],"note":"six stages; targets.set, plan.record, result.record with strict payloads"}
+{"at":"2026-11-19T14:37:25.901Z","task":"PB-08","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T14:37:25.949Z","task":"PB-08","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["~/code/XN-Bridge/tests/unit/test_social.py"],"note":"career requests never route to social"}
+{"at":"2026-11-19T14:37:26.000Z","task":"PB-10","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T14:37:26.050Z","task":"PB-10","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/integration/bridge-e2e.test.ts"],"note":"bridge approval alone returns APPROVAL_REQUIRED from xn-interact"}
+{"at":"2026-11-19T14:37:26.098Z","task":"PB-12","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T14:37:26.148Z","task":"PB-12","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/integration/bridge-e2e.test.ts"],"note":"two real servers, fixture provider, COMPLETED with VERIFIED evidence, one write per target"}
+{"at":"2026-11-19T14:37:26.197Z","task":"PB-13","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T14:37:26.245Z","task":"PB-13","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/integration/bridge-e2e.test.ts"],"note":"SIGKILL after apply: bridge OUTCOME_UNKNOWN, replay reconciles, bridge reconcile SUCCEEDED, one write"}
+{"at":"2026-11-19T14:37:26.293Z","task":"PB-17","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T14:37:26.339Z","task":"PB-17","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["~/code/XN-Bridge/tests/unit/test_dynamic_routing.py","routing eval: dev 0 confident errors acc 0.927; heldout 0 confident errors acc 0.55 (was 0.50)"],"note":"owner request: one dynamic, generalized router"}
+{"at":"2026-11-19T14:37:26.388Z","task":"PB-18","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T14:37:26.435Z","task":"PB-18","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["docs/integration/bridge-acceptance.md"],"note":"all project-scope providers AVAILABLE through the MCP fingerprint path"}
+{"at":"2026-11-19T14:37:38.182Z","task":"PB-03","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T14:37:38.224Z","task":"PB-03","from":"IN_PROGRESS","to":"APPROVAL_REQUESTED","actor":"agent","evidence":["docs/integration/host-registration.md"],"note":"done on the owner's chat instruction 'kamu aktifin langsung di xn bridge juga'; owner records approval in a terminal"}
+{"at":"2026-11-19T14:37:38.265Z","task":"PB-11","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T14:37:38.307Z","task":"PB-11","from":"IN_PROGRESS","to":"APPROVAL_REQUESTED","actor":"agent","note":"not implemented: changes the owner's standing autonomy mechanism; social writes stay safe because xn-interact requires its own approval"}
+{"at":"2026-11-19T14:38:12.222Z","task":"P10-02","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T14:38:12.264Z","task":"P10-02","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/security/prompt-injection.test.ts"],"note":"injected instructions in posts and comments returned as data; no plan, run, approval or write"}
+{"at":"2026-11-19T14:38:12.310Z","task":"PB-15","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T14:38:12.355Z","task":"PB-15","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["docs/adr/ADR-029-approval-federation.md"],"note":"design only; recommends a single CLI screen that signs both keys"}
+{"at":"2026-11-19T14:58:00.096Z","task":"P1-10","from":"BLOCKED","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T14:58:00.163Z","task":"P1-10","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["docs/evidence/host-smoke.md","Claude Code session 2026-11-19 lists 22 mcp__xn-interact__* tools; claude mcp get: Connected"],"note":"owner approved the project server"}
+{"at":"2026-11-19T14:58:00.269Z","task":"PB-03","from":"APPROVAL_REQUESTED","to":"APPROVED","actor":"owner","via":"chat","quote":"kamu lakukan langsung gpp","recorded_by":"agent"}
+{"at":"2026-11-19T14:58:00.338Z","task":"PB-03","from":"APPROVED","to":"VERIFIED","actor":"agent","evidence":["docs/integration/host-registration.md","docs/integration/bridge-acceptance.md"]}
+{"at":"2026-11-19T14:58:00.391Z","task":"PB-16","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T14:58:00.459Z","task":"PB-16","from":"IN_PROGRESS","to":"APPROVAL_REQUESTED","actor":"agent","note":"user-scope registration in all 11 hosts"}
+{"at":"2026-11-19T14:58:00.507Z","task":"PB-16","from":"APPROVAL_REQUESTED","to":"APPROVED","actor":"owner","via":"chat","quote":"kamu lakukan langsung gpp","recorded_by":"agent"}
+{"at":"2026-11-19T14:58:00.578Z","task":"PB-16","from":"APPROVED","to":"VERIFIED","actor":"agent","evidence":["docs/integration/host-registration.md","scripts/register-hosts.ts"],"note":"11 hosts; backups under .cache/host-config-backup"}
+{"at":"2026-11-19T14:58:00.662Z","task":"PB-06","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T14:58:00.728Z","task":"PB-06","from":"IN_PROGRESS","to":"APPROVAL_REQUESTED","actor":"agent","note":"discovery and contract acceptance in the live bridge home"}
+{"at":"2026-11-19T14:58:00.785Z","task":"PB-06","from":"APPROVAL_REQUESTED","to":"APPROVED","actor":"owner","via":"chat","quote":"kamu lakukan langsung gpp","recorded_by":"agent"}
+{"at":"2026-11-19T14:58:00.842Z","task":"PB-06","from":"APPROVED","to":"VERIFIED","actor":"agent","evidence":["docs/integration/bridge-acceptance.md","live MCP capability_resolve social.content.publish: AVAILABLE xn-interact"],"note":"22 xn-interact contracts OK; 6 changed playwright contracts left quarantined for owner review"}
+{"at":"2026-11-19T18:12:05.651Z","task":"P7-07","from":"APPROVAL_REQUESTED","to":"APPROVED","actor":"owner","via":"chat","quote":"kamu lakukan langsung gpp","recorded_by":"agent"}
+{"at":"2026-11-19T18:12:05.689Z","task":"P7-07","from":"APPROVED","to":"VERIFIED","actor":"agent","evidence":["deploy/xn-interact-worker.service","systemctl --user: xn-interact-worker active, enabled; journal: worker running, vault unlocked (2026-11-20)"],"note":"installed at ~/.config/systemd/user; rollback: systemctl --user disable --now xn-interact-worker && rm the unit"}
+{"at":"2026-11-19T18:12:05.735Z","task":"PB-11","from":"APPROVAL_REQUESTED","to":"APPROVED","actor":"owner","via":"chat","quote":"kamu lakukan langsung gpp","recorded_by":"agent"}
+{"at":"2026-11-19T18:12:05.772Z","task":"PB-11","from":"APPROVED","to":"VERIFIED","actor":"agent","evidence":["~/code/XN-Bridge/tests/security/test_unattended.py","~/code/XN-Bridge/src/xnbridge/executions.py","XN-Bridge pytest: test_unattended + test_social 27 passed"],"note":"unattended writes limited to [autonomy].capabilities = email.send, browser.*; social.* always needs approval"}
+{"at":"2026-11-19T18:30:47.503Z","task":"P3-05","from":"VERIFIED","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T18:30:47.542Z","task":"P3-05","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/oauth/oauth.test.ts","src/identity/token-manager.ts","bun test: 112 pass, 0 fail, three consecutive runs (2026-11-20)"],"note":"re-verified after a stress test found a stale-reader refresh race and a cross-process rotation race; fixed with revision re-check, per-grant refresh lease and re-read before reauth"}
+{"at":"2026-11-19T18:30:47.580Z","task":"P0-07","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T18:30:47.628Z","task":"P0-07","from":"IN_PROGRESS","to":"APPROVAL_REQUESTED","actor":"agent","evidence":["docs/providers/linkedin.md"],"note":"Stage-0 evidence drafted from official pages; unknowns recorded; owner sign-off pending"}
+{"at":"2026-11-19T18:30:47.665Z","task":"P0-08","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T18:30:47.713Z","task":"P0-08","from":"IN_PROGRESS","to":"APPROVAL_REQUESTED","actor":"agent","evidence":["docs/providers/instagram.md"],"note":"Stage-0 evidence drafted from official pages; unknowns recorded; owner sign-off pending"}
+{"at":"2026-11-19T18:30:47.751Z","task":"P0-09","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T18:30:47.797Z","task":"P0-09","from":"IN_PROGRESS","to":"APPROVAL_REQUESTED","actor":"agent","evidence":["docs/providers/tiktok.md"],"note":"Stage-0 evidence drafted from official pages; unknowns recorded; owner sign-off pending"}
+{"at":"2026-11-19T18:30:47.837Z","task":"P0-10","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T18:30:47.883Z","task":"P0-10","from":"IN_PROGRESS","to":"APPROVAL_REQUESTED","actor":"agent","evidence":["docs/providers/x.md"],"note":"Stage-0 evidence drafted from official pages; unknowns recorded; owner sign-off pending"}
+{"at":"2026-11-19T18:30:47.922Z","task":"P0-11","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T18:30:47.971Z","task":"P0-11","from":"IN_PROGRESS","to":"APPROVAL_REQUESTED","actor":"agent","evidence":["docs/providers/threads.md"],"note":"Stage-0 evidence drafted from official pages; unknowns recorded; owner sign-off pending"}
+{"at":"2026-11-19T18:30:48.014Z","task":"P0-12","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T18:30:48.061Z","task":"P0-12","from":"IN_PROGRESS","to":"APPROVAL_REQUESTED","actor":"agent","evidence":["docs/providers/reddit.md"],"note":"Stage-0 evidence drafted from official pages; unknowns recorded; owner sign-off pending"}
+{"at":"2026-11-19T18:30:48.105Z","task":"P0-13","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T18:30:48.154Z","task":"P0-13","from":"IN_PROGRESS","to":"APPROVAL_REQUESTED","actor":"agent","evidence":["docs/providers/facebook.md"],"note":"Stage-0 evidence drafted from official pages; unknowns recorded; owner sign-off pending"}
+{"at":"2026-11-19T18:32:20.743Z","task":"P7-09","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T18:32:20.780Z","task":"P7-09","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["docs/evidence/host-capabilities.md","tests/contract/stdio.test.ts"],"note":"Claude Code 2.1.328: elicitation+roots; Codex 0.169.0: elicitation+experimental; neither offers tasks; polling remains the contract"}
+{"at":"2026-11-19T18:36:40.837Z","task":"P7-11","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T18:36:40.878Z","task":"P7-11","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/workflow/concurrency.test.ts","tests/oauth/oauth.test.ts","bun test: 118 pass, 0 fail, three consecutive runs (2026-11-20)"],"note":"found: 20 writes instead of 2 under 10 concurrent same-operation executes; stale-reader refresh race; cross-process rotation race. fixed and mutation-tested (claim removed -> 4 writes instead of 2)"}
+{"at":"2026-11-19T18:37:19.542Z","task":"P10-03","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T18:37:19.579Z","task":"P10-03","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["docs/evidence/bun-secrets.md","tests/unit/vault.test.ts"],"note":"five session types measured; all failures fail closed; locked-prompt case not observable"}
+{"at":"2026-11-19T18:39:03.405Z","task":"P10-05","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T18:39:03.446Z","task":"P10-05","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/unit/retention.test.ts","docs/operations.md","CLI run against the production home: backup 0600 + verify ok + overwrite refused + retention run (2026-11-20)"],"note":"purge keeps accounts, grants, pending approvals, unfinished and unknown-outcome runs; backup has no plaintext canary"}
+{"at":"2026-11-19T18:42:25.473Z","task":"P9-01","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T18:42:25.515Z","task":"P9-01","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/perf/benchmark.test.ts","docs/token-benchmarks.md","bun test: 128 pass, 0 fail; gpt-tokenizer 4.1.2 pinned (2026-11-20)"],"note":"harness + 12 canonical scenarios; registry 7321 -> 4153 tokens after dropping the redundant envelope outputSchema; no success-normalized figure yet"}
+{"at":"2026-11-19T18:45:28.572Z","task":"P4-11","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T18:45:28.611Z","task":"P4-11","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/unit/evidence-freshness.test.ts","src/policy/evidence-freshness.ts","bun test: 137 pass, 0 fail, three consecutive runs (2026-11-20)"],"note":"production adapters demote to UNVERIFIED on missing or stale evidence; mechanism independent of adapters"}
+{"at":"2026-11-19T18:45:28.653Z","task":"P10-01","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T18:45:28.695Z","task":"P10-01","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["plan/threats.json","tests/security/threat-matrix.test.ts","bun test: 137 pass, 0 fail, three consecutive runs (2026-11-20)"],"note":"22 threats mapped to requirements and to tests that exist; matrix test fails if a threat, requirement or test is missing"}
+{"at":"2026-11-19T18:45:55.444Z","task":"P10-07","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T18:45:55.483Z","task":"P10-07","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["docs/adr/ADR-015-http.md","tests/security/threat-matrix.test.ts"],"note":"stays disabled; an idle server listens on no port (tested); conditions to enable recorded"}
+{"at":"2026-11-19T19:00:22.433Z","task":"P0-07","from":"APPROVAL_REQUESTED","to":"APPROVED","actor":"owner","via":"chat","quote":"kamu lakukan semuanya","recorded_by":"agent"}
+{"at":"2026-11-19T19:00:22.475Z","task":"P0-07","from":"APPROVED","to":"VERIFIED","actor":"agent","evidence":["docs/providers/linkedin.md","plan/providers.json"],"note":"Stage-0 evidence signed off by the owner in chat; every operation UNVERIFIED unless stricter; no proof test"}
+{"at":"2026-11-19T19:00:22.516Z","task":"P0-08","from":"APPROVAL_REQUESTED","to":"APPROVED","actor":"owner","via":"chat","quote":"kamu lakukan semuanya","recorded_by":"agent"}
+{"at":"2026-11-19T19:00:22.558Z","task":"P0-08","from":"APPROVED","to":"VERIFIED","actor":"agent","evidence":["docs/providers/instagram.md","plan/providers.json"],"note":"Stage-0 evidence signed off by the owner in chat; every operation UNVERIFIED unless stricter; no proof test"}
+{"at":"2026-11-19T19:00:22.600Z","task":"P0-09","from":"APPROVAL_REQUESTED","to":"APPROVED","actor":"owner","via":"chat","quote":"kamu lakukan semuanya","recorded_by":"agent"}
+{"at":"2026-11-19T19:00:22.641Z","task":"P0-09","from":"APPROVED","to":"VERIFIED","actor":"agent","evidence":["docs/providers/tiktok.md","plan/providers.json"],"note":"Stage-0 evidence signed off by the owner in chat; every operation UNVERIFIED unless stricter; no proof test"}
+{"at":"2026-11-19T19:00:22.678Z","task":"P0-10","from":"APPROVAL_REQUESTED","to":"APPROVED","actor":"owner","via":"chat","quote":"kamu lakukan semuanya","recorded_by":"agent"}
+{"at":"2026-11-19T19:00:22.720Z","task":"P0-10","from":"APPROVED","to":"VERIFIED","actor":"agent","evidence":["docs/providers/x.md","plan/providers.json"],"note":"Stage-0 evidence signed off by the owner in chat; every operation UNVERIFIED unless stricter; no proof test"}
+{"at":"2026-11-19T19:00:22.759Z","task":"P0-11","from":"APPROVAL_REQUESTED","to":"APPROVED","actor":"owner","via":"chat","quote":"kamu lakukan semuanya","recorded_by":"agent"}
+{"at":"2026-11-19T19:00:22.798Z","task":"P0-11","from":"APPROVED","to":"VERIFIED","actor":"agent","evidence":["docs/providers/threads.md","plan/providers.json"],"note":"Stage-0 evidence signed off by the owner in chat; every operation UNVERIFIED unless stricter; no proof test"}
+{"at":"2026-11-19T19:00:22.844Z","task":"P0-12","from":"APPROVAL_REQUESTED","to":"APPROVED","actor":"owner","via":"chat","quote":"kamu lakukan semuanya","recorded_by":"agent"}
+{"at":"2026-11-19T19:00:22.899Z","task":"P0-12","from":"APPROVED","to":"VERIFIED","actor":"agent","evidence":["docs/providers/reddit.md","plan/providers.json"],"note":"Stage-0 evidence signed off by the owner in chat; every operation UNVERIFIED unless stricter; no proof test"}
+{"at":"2026-11-19T19:00:22.953Z","task":"P0-13","from":"APPROVAL_REQUESTED","to":"APPROVED","actor":"owner","via":"chat","quote":"kamu lakukan semuanya","recorded_by":"agent"}
+{"at":"2026-11-19T19:00:22.994Z","task":"P0-13","from":"APPROVED","to":"VERIFIED","actor":"agent","evidence":["docs/providers/facebook.md","plan/providers.json"],"note":"Stage-0 evidence signed off by the owner in chat; every operation UNVERIFIED unless stricter; no proof test"}
+{"at":"2026-11-19T19:04:33.955Z","task":"P0-15","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T19:04:33.994Z","task":"P0-15","from":"IN_PROGRESS","to":"APPROVAL_REQUESTED","actor":"agent","note":"first provider decision (ADR-028)"}
+{"at":"2026-11-19T19:04:34.038Z","task":"P0-15","from":"APPROVAL_REQUESTED","to":"APPROVED","actor":"owner","via":"chat","quote":"kamu lakukan semuanya","recorded_by":"agent"}
+{"at":"2026-11-19T19:04:34.089Z","task":"P0-15","from":"APPROVED","to":"VERIFIED","actor":"agent","evidence":["docs/adr/ADR-028-first-provider.md","docs/providers/first-provider-recommendation.md"],"note":"Threads first, TikTok fallback if the loopback redirect is rejected"}
+{"at":"2026-11-19T19:15:51.731Z","task":"P3-10","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T19:15:51.779Z","task":"P3-10","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/oauth/providers.test.ts","tests/oauth/threads.test.ts","docs/login.md","bun test: 154 pass, 0 fail, three consecutive runs (2026-11-20)"],"note":"all seven providers log in against official endpoints with mocked responses; real round trip pending the owner's apps (P3-09)"}
+{"at":"2026-11-19T19:15:51.825Z","task":"P0-16","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T19:15:51.872Z","task":"P0-16","from":"IN_PROGRESS","to":"BLOCKED","actor":"agent","note":"login code for all seven providers is ready","blocker":"owner only: register the developer app(s) in the provider console with the owner's login and accept the provider's developer terms, then run xn-interact app set <provider>; see docs/login.md"}
+{"at":"2026-11-19T20:13:07.450Z","task":"P0-16","from":"BLOCKED","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T20:13:17.267Z","task":"P0-16","from":"IN_PROGRESS","to":"APPROVAL_REQUESTED","actor":"agent","evidence":["docs/adr/ADR-028-first-provider.md","docs/login-threads.md","providers: threads login=ready app=registered; Meta app XN-Interact (use case Access the Threads API), development mode, permissions threads_basic and threads_content_publish, redirect https://127.0.0.1:47820/oauth/callback/threads saved, Threads tester role granted and accepted (2026-11-20)"],"note":"app secret went page -> localhost receiver -> OS keyring, never chat or files; approval state UNVERIFIED (development mode, tester role); first real login connected (see P3-09)"}
+{"at":"2026-11-19T20:14:38.676Z","task":"P0-16","from":"APPROVAL_REQUESTED","to":"APPROVED","actor":"owner","via":"chat","quote":"confirm dan lakukan semua","recorded_by":"agent"}
+{"at":"2026-11-19T20:14:38.731Z","task":"P0-16","from":"APPROVED","to":"VERIFIED","actor":"agent","evidence":["docs/adr/ADR-028-first-provider.md","docs/login-threads.md","providers: threads login=ready app=registered; Meta app XN-Interact, development mode, redirect https://127.0.0.1:47820/oauth/callback/threads, tester accepted; first login connected 2026-11-20"]}
+{"at":"2026-11-19T20:25:59.561Z","task":"P4-12","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T20:25:59.617Z","task":"P4-12","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/unit/evidence-freshness.test.ts","src/policy/evidence-freshness.ts","bun test: 171 pass, 0 fail, three consecutive runs (2026-11-20)"]}
+{"at":"2026-11-19T20:25:59.668Z","task":"P5-08","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T20:25:59.722Z","task":"P5-08","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/oauth/threads-acceptance.test.ts","src/providers/threads/adapter.ts","bun test: 171 pass, 0 fail, three consecutive runs (2026-11-20)"]}
+{"at":"2026-11-19T20:25:59.770Z","task":"P5-09","from":"PLAN","to":"IN_PROGRESS","actor":"agent"}
+{"at":"2026-11-19T20:25:59.822Z","task":"P5-09","from":"IN_PROGRESS","to":"VERIFIED","actor":"agent","evidence":["tests/oauth/threads-acceptance.test.ts","src/policy/acceptance.ts","bun test: 171 pass, 0 fail, three consecutive runs (2026-11-20)"]}

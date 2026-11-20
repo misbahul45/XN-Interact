@@ -1,0 +1,29 @@
+{
+  "id": "content.publish.one",
+  "version": "1.0.0",
+  "operations": [
+    "content.publish.text"
+  ],
+  "execution": "workflow",
+  "workflow": "content.publish@1",
+  "risk": "EXTERNAL_WRITE",
+  "approval": "trusted_user_plan_hash",
+  "targets": "explicit_account_ids",
+  "failure_policy": "stop",
+  "compensate": "none",
+  "output_profile": "compact",
+  "input": {
+    "account_ids": {
+      "type": "string[]",
+      "required": true,
+      "max_items": 1
+    },
+    "draft_id": {
+      "type": "string",
+      "required": true
+    },
+    "native": {
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "content.mutate@1",
+  "risk": "EXTERNAL_WRITE",
+  "steps": [
+    {
+      "id": "preflight",
+      "internal": "preflight"
+    },
+    {
+      "id": "approval",
+      "internal": "approval_gate"
+    },
+    {
+      "id": "intent",
+      "internal": "journal_intent"
+    },
+    {
+      "id": "mutate",
+      "op": [
+        "content.update",
+        "content.delete"
+      ]
+    },
+    {
+      "id": "verify",
+      "op": [
+        "reconcile.read"
+      ]
+    },
+    {
+      "id": "aggregate",
+      "internal": "aggregate"
+    }
+  ]
+}

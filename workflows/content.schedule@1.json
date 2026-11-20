@@ -1,0 +1,31 @@
+{
+  "id": "content.schedule@1",
+  "risk": "EXTERNAL_WRITE",
+  "steps": [
+    {
+      "id": "preflight",
+      "internal": "preflight"
+    },
+    {
+      "id": "approval",
+      "internal": "approval_gate"
+    },
+    {
+      "id": "wait",
+      "internal": "schedule_wait"
+    },
+    {
+      "id": "fanout",
+      "internal": "fanout",
+      "children": [
+        "content.publish@1",
+        "content.media_publish@1"
+      ],
+      "inherits_approval": true
+    },
+    {
+      "id": "aggregate",
+      "internal": "aggregate"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "ops.recover",
+  "version": "1.0.0",
+  "operations": [
+    "reconcile.read"
+  ],
+  "execution": "workflow",
+  "workflow": "ops.recover@1",
+  "risk": "LOCAL_WRITE",
+  "approval": "none",
+  "targets": "none",
+  "failure_policy": "per_target_partial_success",
+  "compensate": "none",
+  "output_profile": "compact",
+  "input": {
+    "run_ids": {
+      "type": "string[]",
+      "max_items": 50
+    }
+  }
+}

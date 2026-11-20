@@ -1,0 +1,470 @@
+{
+  "version": 1,
+  "source": "docs/threat-model.md",
+  "statuses": [
+    "covered"
+  ],
+  "threats": [
+    {
+      "id": "T01",
+      "title": "OAuth state theft or CSRF",
+      "requirements": [
+        "AUTH-03"
+      ],
+      "tests": [
+        {
+          "file": "tests/oauth/oauth.test.ts",
+          "name": "unknown state, replay, wrong host and wrong provider path are rejected"
+        }
+      ]
+    },
+    {
+      "id": "T02",
+      "title": "Authorization code interception",
+      "requirements": [
+        "AUTH-03",
+        "AUTH-04"
+      ],
+      "tests": [
+        {
+          "file": "tests/oauth/oauth.test.ts",
+          "name": "an injected code bound to another PKCE challenge fails the exchange"
+        },
+        {
+          "file": "tests/oauth/profiles.test.ts",
+          "name": "PKCE challenge matches the RFC 7636 vector"
+        }
+      ]
+    },
+    {
+      "id": "T03",
+      "title": "Open redirect",
+      "requirements": [
+        "AUTH-04"
+      ],
+      "tests": [
+        {
+          "file": "tests/security/threat-matrix.test.ts",
+          "name": "no tool input can choose a redirect, callback or base URL"
+        }
+      ]
+    },
+    {
+      "id": "T04",
+      "title": "Leaked credentials",
+      "requirements": [
+        "AUTH-09",
+        "SEC-01",
+        "SEC-06",
+        "OPS-02"
+      ],
+      "tests": [
+        {
+          "file": "tests/security/canary.test.ts",
+          "name": "provider tokens never appear in tool output"
+        },
+        {
+          "file": "tests/unit/retention.test.ts",
+          "name": "is a verified, private copy that contains no plaintext credential"
+        }
+      ]
+    },
+    {
+      "id": "T05",
+      "title": "Confused deputy",
+      "requirements": [
+        "CORE-09",
+        "FLOW-05",
+        "FLOW-06",
+        "FLOW-10"
+      ],
+      "tests": [
+        {
+          "file": "tests/security/approvals.test.ts",
+          "name": "confirm or approved arguments cannot self-approve"
+        },
+        {
+          "file": "tests/security/approvals.test.ts",
+          "name": "execute without a human approval is refused"
+        }
+      ]
+    },
+    {
+      "id": "T06",
+      "title": "Account mix-up across providers or accounts",
+      "requirements": [
+        "SEC-02",
+        "AUTH-05",
+        "AUTH-11"
+      ],
+      "tests": [
+        {
+          "file": "tests/security/threat-matrix.test.ts",
+          "name": "a grant moved to another account cannot be decrypted or used"
+        },
+        {
+          "file": "tests/unit/capabilities.test.ts",
+          "name": "role changes and grant revisions invalidate cached verdicts"
+        }
+      ]
+    },
+    {
+      "id": "T07",
+      "title": "MCP client impersonation",
+      "requirements": [
+        "CORE-08"
+      ],
+      "tests": [
+        {
+          "file": "tests/security/threat-matrix.test.ts",
+          "name": "an idle server listens on no network port"
+        }
+      ]
+    },
+    {
+      "id": "T08",
+      "title": "Prompt injection in provider content",
+      "requirements": [
+        "SEC-03"
+      ],
+      "tests": [
+        {
+          "file": "tests/security/prompt-injection.test.ts",
+          "name": "instructions inside posts and comments are returned as data"
+        }
+      ]
+    },
+    {
+      "id": "T09",
+      "title": "SSRF through media URLs",
+      "requirements": [
+        "ROUTE-08",
+        "SEC-04"
+      ],
+      "tests": [
+        {
+          "file": "tests/security/sandbox.test.ts",
+          "name": "refuses remote URLs, traversal, symlinks"
+        },
+        {
+          "file": "tests/unit/transport.test.ts",
+          "name": "refuses non-https, foreign hosts and credentials in URLs"
+        }
+      ]
+    },
+    {
+      "id": "T10",
+      "title": "Symlink or traversal in local files",
+      "requirements": [
+        "SEC-04"
+      ],
+      "tests": [
+        {
+          "file": "tests/security/sandbox.test.ts",
+          "name": "refuses remote URLs, traversal, symlinks"
+        }
+      ]
+    },
+    {
+      "id": "T11",
+      "title": "Oversized files",
+      "requirements": [
+        "SEC-04"
+      ],
+      "tests": [
+        {
+          "file": "tests/security/sandbox.test.ts",
+          "name": "refuses remote URLs, traversal, symlinks, unknown types and oversized files"
+        }
+      ]
+    },
+    {
+      "id": "T12",
+      "title": "Mass messaging or spam",
+      "requirements": [
+        "ROUTE-06",
+        "PERF-04",
+        "FLOW-05"
+      ],
+      "tests": [
+        {
+          "file": "tests/security/threat-matrix.test.ts",
+          "name": "there is no bulk skill and fan-out is capped"
+        },
+        {
+          "file": "tests/unit/capabilities.test.ts",
+          "name": "budgets deny before any provider request"
+        }
+      ]
+    },
+    {
+      "id": "T13",
+      "title": "Cost exhaustion",
+      "requirements": [
+        "ROUTE-06",
+        "PERF-04"
+      ],
+      "tests": [
+        {
+          "file": "tests/unit/capabilities.test.ts",
+          "name": "budgets deny before any provider request"
+        }
+      ]
+    },
+    {
+      "id": "T14",
+      "title": "Secrets in logs",
+      "requirements": [
+        "SEC-06",
+        "OPS-02"
+      ],
+      "tests": [
+        {
+          "file": "tests/security/canary.test.ts",
+          "name": "provider tokens never appear in tool output"
+        }
+      ]
+    },
+    {
+      "id": "T15",
+      "title": "Hostile callback requests",
+      "requirements": [
+        "AUTH-04"
+      ],
+      "tests": [
+        {
+          "file": "tests/oauth/oauth.test.ts",
+          "name": "unknown state, replay, wrong host and wrong provider path are rejected"
+        },
+        {
+          "file": "tests/oauth/oauth.test.ts",
+          "name": "expired attempt is refused"
+        }
+      ]
+    },
+    {
+      "id": "T16",
+      "title": "Duplicate writes",
+      "requirements": [
+        "FLOW-01",
+        "FLOW-03",
+        "FLOW-11"
+      ],
+      "tests": [
+        {
+          "file": "tests/workflow/concurrency.test.ts",
+          "name": "the same operation id fired ten times returns one run and sends once per target"
+        },
+        {
+          "file": "tests/workflow/concurrency.test.ts",
+          "name": "the atomic step claim alone prevents a duplicate provider write"
+        },
+        {
+          "file": "tests/workflow/recovery.test.ts",
+          "name": "a process killed after the provider applied the write is recovered without a duplicate"
+        }
+      ]
+    },
+    {
+      "id": "T17",
+      "title": "Approval replay",
+      "requirements": [
+        "FLOW-05",
+        "FLOW-06"
+      ],
+      "tests": [
+        {
+          "file": "tests/security/approvals.test.ts",
+          "name": "an approval is single-use"
+        }
+      ]
+    },
+    {
+      "id": "T18",
+      "title": "Policy drift at providers",
+      "requirements": [
+        "ROUTE-09",
+        "SEC-05"
+      ],
+      "tests": [
+        {
+          "file": "tests/unit/evidence-freshness.test.ts",
+          "name": "is demoted to UNVERIFIED when its evidence is missing or old"
+        },
+        {
+          "file": "tests/plan/plan.test.ts",
+          "name": "a verified provider operation without proof"
+        }
+      ]
+    },
+    {
+      "id": "T19",
+      "title": "Counterfeit provider domain",
+      "requirements": [
+        "ROUTE-08"
+      ],
+      "tests": [
+        {
+          "file": "tests/unit/transport.test.ts",
+          "name": "refuses non-https, foreign hosts and credentials in URLs"
+        }
+      ]
+    },
+    {
+      "id": "T20",
+      "title": "Dependency compromise",
+      "requirements": [
+        "CORE-02"
+      ],
+      "tests": [
+        {
+          "file": "tests/security/threat-matrix.test.ts",
+          "name": "every dependency is pinned to an exact version and locked"
+        },
+        {
+          "file": "tests/security/static-guards.test.ts",
+          "name": "no model SDK, browser automation, frontend or extra infrastructure dependency"
+        }
+      ]
+    },
+    {
+      "id": "T21",
+      "title": "Bridge autonomy treated as consent",
+      "requirements": [
+        "INT-03",
+        "INT-08"
+      ],
+      "tests": [
+        {
+          "file": "tests/integration/bridge-e2e.test.ts",
+          "name": "route, workflow, plan, both approvals, execute once"
+        }
+      ]
+    },
+    {
+      "id": "T22",
+      "title": "Agent marks its own approval in the tracker",
+      "requirements": [
+        "CORE-02"
+      ],
+      "tests": [
+        {
+          "file": "tests/plan/plan.test.ts",
+          "name": "agent self-approval in checkpoints"
+        }
+      ]
+    },
+    {
+      "id": "T23",
+      "title": "Agent arms an unverified operation itself, or reuses an arming (acceptance bypass)",
+      "requirements": [
+        "FLOW-05",
+        "ROUTE-09"
+      ],
+      "tests": [
+        {
+          "file": "tests/oauth/threads-acceptance.test.ts",
+          "name": "arming needs a terminal; listing works without one"
+        },
+        {
+          "file": "tests/oauth/threads-acceptance.test.ts",
+          "name": "one live arming per account and operation, single use, capped lifetime, scoped to its account"
+        }
+      ]
+    },
+    {
+      "id": "T24",
+      "title": "Agent or injected content misuses a standing grant, or creates, extends or revokes one (standing grant abuse)",
+      "requirements": [
+        "FLOW-05",
+        "ROUTE-09"
+      ],
+      "tests": [
+        {
+          "file": "tests/security/grants.test.ts",
+          "name": "a grant can only be created or revoked by the owner CLI, never through an MCP tool or argument"
+        },
+        {
+          "file": "tests/security/grants.test.ts",
+          "name": "a grant does not bypass the capability gate: an UNVERIFIED operation cannot even be planned"
+        },
+        {
+          "file": "tests/security/grants.test.ts",
+          "name": "grant limits are enforced: lifetime, counts and the operations a grant may cover"
+        },
+        {
+          "file": "tests/security/grants.test.ts",
+          "name": "an unresolved outcome suspends the grant and later plans need the owner again"
+        },
+        {
+          "file": "tests/security/grants.test.ts",
+          "name": "creating and revoking need a terminal; listing works without one"
+        }
+      ]
+    },
+    {
+      "id": "T25",
+      "title": "Agent or injected content signs evidence itself, or signs without a real run (evidence signoff abuse)",
+      "requirements": [
+        "FLOW-05",
+        "ROUTE-09"
+      ],
+      "tests": [
+        {
+          "file": "tests/security/signoffs.test.ts",
+          "name": "signing needs a real, successful acceptance run: without one it is refused and nothing changes"
+        },
+        {
+          "file": "tests/security/signoffs.test.ts",
+          "name": "evidence can only be signed or revoked by the owner CLI, never through an MCP tool or argument"
+        },
+        {
+          "file": "tests/security/signoffs.test.ts",
+          "name": "an expired or revoked signoff makes the operation UNVERIFIED again at once, even with a cached snapshot"
+        },
+        {
+          "file": "tests/security/signoffs.test.ts",
+          "name": "a signoff is scoped to its account and one operation, and its lifetime is bounded"
+        },
+        {
+          "file": "tests/security/signoffs.test.ts",
+          "name": "signing and revoking need a terminal; listing works without one"
+        }
+      ]
+    },
+    {
+      "id": "T26",
+      "title": "Agent publishes a different image than approved, an image from an arbitrary URL, or an unsuitable file to Instagram (media hosting abuse)",
+      "requirements": [
+        "FLOW-05",
+        "ROUTE-09"
+      ],
+      "tests": [
+        {
+          "file": "tests/oauth/instagram-publish.test.ts",
+          "name": "step 1 checks the public URL, then creates a container from it and publishes nothing"
+        },
+        {
+          "file": "tests/oauth/instagram-publish.test.ts",
+          "name": "an image that is not served at its public URL sends nothing to Instagram"
+        },
+        {
+          "file": "tests/oauth/instagram-publish.test.ts",
+          "name": "a PNG is refused at plan time, before any approval, because Instagram only accepts JPEG"
+        },
+        {
+          "file": "tests/oauth/instagram-publish.test.ts",
+          "name": "only <sha256>.jpg names and real git checkouts are accepted"
+        },
+        {
+          "file": "tests/oauth/instagram-publish.test.ts",
+          "name": "url works without a terminal and names the file after its sha256; host and first-post need a terminal"
+        },
+        {
+          "file": "tests/oauth/instagram-publish.test.ts",
+          "name": "only a plain HTTPS directory URL is accepted"
+        }
+      ]
+    }
+  ]
+}

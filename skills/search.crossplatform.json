@@ -1,0 +1,27 @@
+{
+  "id": "search.crossplatform",
+  "version": "1.0.0",
+  "operations": [
+    "search.content"
+  ],
+  "execution": "direct",
+  "workflow": null,
+  "risk": "READ",
+  "approval": "none",
+  "targets": "explicit_account_ids",
+  "failure_policy": "per_target_partial_success",
+  "compensate": "none",
+  "output_profile": "compact",
+  "input": {
+    "account_ids": {
+      "type": "string[]",
+      "required": true,
+      "max_items": 20
+    },
+    "query": {
+      "type": "string",
+      "required": true,
+      "max_length": 300
+    }
+  }
+}

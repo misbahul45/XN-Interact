@@ -1,0 +1,37 @@
+{
+  "id": "content.prepare",
+  "version": "1.0.0",
+  "operations": [
+    "content.draft",
+    "media.stage"
+  ],
+  "execution": "direct",
+  "workflow": null,
+  "risk": "LOCAL_WRITE",
+  "approval": "none",
+  "targets": "none",
+  "failure_policy": "stop",
+  "compensate": "none",
+  "output_profile": "compact",
+  "input": {
+    "text": {
+      "type": "string",
+      "max_length": 10000
+    },
+    "media_ids": {
+      "type": "string[]",
+      "max_items": 10
+    },
+    "title": {
+      "type": "string",
+      "max_length": 300
+    },
+    "link": {
+      "type": "string",
+      "max_length": 2000
+    },
+    "overrides": {
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "engagement.review",
+  "version": "1.0.0",
+  "operations": [
+    "engagement.read"
+  ],
+  "execution": "direct",
+  "workflow": null,
+  "risk": "READ",
+  "approval": "none",
+  "targets": "explicit_account_ids",
+  "failure_policy": "per_target_partial_success",
+  "compensate": "none",
+  "output_profile": "compact",
+  "input": {
+    "account_id": {
+      "type": "string",
+      "required": true
+    },
+    "content_id": {
+      "type": "string"
+    },
+    "cursor": {
+      "type": "string"
+    },
+    "limit": {
+      "type": "integer"
+    }
+  }
+}

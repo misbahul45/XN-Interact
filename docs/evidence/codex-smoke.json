@@ -1,0 +1,42 @@
+{
+  "runtimeStatus": "connected",
+  "toolsError": null,
+  "tools": [
+    "social_workflows_status",
+    "social_content_get",
+    "social_system_health",
+    "social_workflows_execute",
+    "social_content_publish",
+    "social_accounts_list",
+    "social_results_get",
+    "social_approvals_status",
+    "social_content_delete",
+    "social_media_upload",
+    "social_capabilities_get",
+    "social_search",
+    "social_engagement_execute",
+    "social_auth_disconnect",
+    "social_analytics_get",
+    "social_content_create",
+    "social_auth_connect",
+    "social_content_list",
+    "social_content_update",
+    "social_auth_status",
+    "social_engagement_list",
+    "social_workflows_cancel"
+  ],
+  "rowKeys": [
+    "name",
+    "runtimeStatus",
+    "pluginId",
+    "httpOrigin",
+    "serverInfo",
+    "serverCapabilities",
+    "toolListMeta",
+    "tools",
+    "toolsError",
+    "resources",
+    "resourceTemplates",
+    "authStatus"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "xn-interact": {
+      "command": "/home/misbahul45/.bun/bin/bun",
+      "args": ["run", "/home/misbahul45/code/XN-Interact/src/main.ts"],
+      "env": {
+        "XN_INTERACT_HOME": "/home/misbahul45/code/XN-Interact/data"
+      }
+    }
+  }
+}

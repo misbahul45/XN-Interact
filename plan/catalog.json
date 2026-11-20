@@ -1,0 +1,260 @@
+{
+  "version": 1,
+  "source": "XN-Interact baseline spec (2026-11-19) reconciled by docs/plan/consistency-review.md",
+  "server": {
+    "name": "xn-interact",
+    "transport_default": "stdio",
+    "home_env": "XN_INTERACT_HOME",
+    "tool_name_pattern": "^[a-z][a-z0-9_]{0,63}$",
+    "expected_tool_count": 22,
+    "expected_skill_count": 14
+  },
+  "providers": ["linkedin", "instagram", "tiktok", "x", "threads", "reddit", "facebook"],
+  "enums": {
+    "risk_class": ["READ", "LOCAL_WRITE", "EXTERNAL_WRITE"],
+    "approval_policy": ["none", "required", "per_skill"],
+    "side_effect": ["none", "local_state", "account_link", "provider_private", "public_write", "destructive"],
+    "operation_scope": ["local", "provider"],
+    "capability_state": [
+      "AVAILABLE", "NOT_CONNECTED", "MISSING_SCOPES", "APP_APPROVAL_REQUIRED", "ACCOUNT_TYPE_UNSUPPORTED",
+      "ACCOUNT_ROLE_INSUFFICIENT", "RATE_LIMITED", "COST_LIMITED", "NEEDS_APPROVAL", "MANUAL_ONLY",
+      "PROHIBITED", "UNVERIFIED", "UNSUPPORTED", "PROVIDER_UNAVAILABLE"
+    ],
+    "run_state": [
+      "accepted", "preflight", "unsupported", "approval_pending", "queued", "running", "waiting_provider",
+      "reconciling", "succeeded", "partially_succeeded", "failed", "unknown_outcome", "cancelled"
+    ],
+    "run_terminal": ["unsupported", "succeeded", "partially_succeeded", "failed", "unknown_outcome", "cancelled"],
+    "step_state": [
+      "pending", "ready", "running", "waiting_provider", "awaiting_user", "completed", "failed",
+      "unknown_outcome", "skipped", "cancelled"
+    ],
+    "target_outcome": [
+      "succeeded", "failed", "unsupported", "needs_reauth", "app_approval_required", "pending",
+      "unknown_outcome", "cancelled", "skipped"
+    ],
+    "error_category": ["auth", "approval", "unsupported", "policy", "rate", "cost", "validation", "provider", "conflict", "unknown"],
+    "output_profile": ["compact", "standard", "detailed"],
+    "tool_mode": ["plan", "execute"],
+    "route_kind": ["direct", "workflow", "skill", "skill_map", "caller_skill"],
+    "skill_execution": ["direct", "workflow"],
+    "internal_step": [
+      "preflight", "approval_gate", "journal_intent", "oauth_callback_wait", "provider_poll", "schedule_wait",
+      "fanout", "load_journal", "aggregate"
+    ]
+  },
+  "operations": [
+    {"id": "auth.connect", "scope": "local", "risk": "LOCAL_WRITE", "side_effect": "account_link", "summary": "Create a pending OAuth attempt and authorization URL"},
+    {"id": "auth.status", "scope": "local", "risk": "READ", "side_effect": "none", "summary": "Read OAuth attempt and grant health"},
+    {"id": "auth.revoke", "scope": "provider", "risk": "EXTERNAL_WRITE", "side_effect": "destructive", "summary": "Revoke a provider grant and purge the local grant"},
+    {"id": "account.read", "scope": "provider", "risk": "READ", "side_effect": "none", "summary": "Resolve identity, account type and role"},
+    {"id": "capability.read", "scope": "local", "risk": "READ", "side_effect": "none", "summary": "Resolve per-account capability verdicts"},
+    {"id": "content.read", "scope": "provider", "risk": "READ", "side_effect": "none", "summary": "List or get authorized content"},
+    {"id": "content.draft", "scope": "local", "risk": "LOCAL_WRITE", "side_effect": "local_state", "summary": "Create or edit a local content draft"},
+    {"id": "content.publish.text", "scope": "provider", "risk": "EXTERNAL_WRITE", "side_effect": "public_write", "summary": "Publish a text post"},
+    {"id": "content.publish.image", "scope": "provider", "risk": "EXTERNAL_WRITE", "side_effect": "public_write", "summary": "Publish an image post"},
+    {"id": "content.publish.video", "scope": "provider", "risk": "EXTERNAL_WRITE", "side_effect": "public_write", "summary": "Publish a video post"},
+    {"id": "content.update", "scope": "provider", "risk": "EXTERNAL_WRITE", "side_effect": "public_write", "summary": "Edit owned content"},
+    {"id": "content.delete", "scope": "provider", "risk": "EXTERNAL_WRITE", "side_effect": "destructive", "summary": "Delete owned content"},
+    {"id": "engagement.read", "scope": "provider", "risk": "READ", "side_effect": "none", "summary": "Read comments, replies and reactions"},
+    {"id": "engagement.reply", "scope": "provider", "risk": "EXTERNAL_WRITE", "side_effect": "public_write", "summary": "Reply to a comment"},
+    {"id": "engagement.react", "scope": "provider", "risk": "EXTERNAL_WRITE", "side_effect": "public_write", "summary": "React to content"},
+    {"id": "engagement.hide", "scope": "provider", "risk": "EXTERNAL_WRITE", "side_effect": "public_write", "summary": "Hide or moderate a comment"},
+    {"id": "search.content", "scope": "provider", "risk": "READ", "side_effect": "none", "summary": "Search where the provider allows it"},
+    {"id": "analytics.read", "scope": "provider", "risk": "READ", "side_effect": "none", "summary": "Read metrics with semantics and provenance"},
+    {"id": "media.stage", "scope": "local", "risk": "LOCAL_WRITE", "side_effect": "local_state", "summary": "Validate and stage local media in the sandbox"},
+    {"id": "media.upload", "scope": "provider", "risk": "EXTERNAL_WRITE", "side_effect": "provider_private", "summary": "Upload staged media to a provider container"},
+    {"id": "reconcile.read", "scope": "provider", "risk": "READ", "side_effect": "none", "summary": "Read-only verification of a write outcome"},
+    {"id": "workflow.read", "scope": "local", "risk": "READ", "side_effect": "none", "summary": "Read run and step state"},
+    {"id": "workflow.cancel", "scope": "local", "risk": "LOCAL_WRITE", "side_effect": "local_state", "summary": "Stop future steps of a run"},
+    {"id": "result.read", "scope": "local", "risk": "READ", "side_effect": "none", "summary": "Fetch a scoped cached result"},
+    {"id": "approval.read", "scope": "local", "risk": "READ", "side_effect": "none", "summary": "Read approval decisions"},
+    {"id": "system.health", "scope": "local", "risk": "READ", "side_effect": "none", "summary": "Vault, provider, workflow and quota readiness"}
+  ],
+  "error_codes": [
+    {"code": "VALIDATION_FAILED", "category": "validation", "retryable": false, "bridge_error_class": "PRECONDITION_FAILED"},
+    {"code": "ACCOUNT_REQUIRED", "category": "validation", "retryable": false, "bridge_error_class": "PRECONDITION_FAILED"},
+    {"code": "AMBIGUOUS_SKILL", "category": "validation", "retryable": false, "bridge_error_class": "PRECONDITION_FAILED"},
+    {"code": "RESULT_REF_EXPIRED", "category": "validation", "retryable": false, "bridge_error_class": "STALE_EVIDENCE"},
+    {"code": "NOT_CONNECTED", "category": "auth", "retryable": false, "bridge_error_class": "AUTH_REQUIRED", "capability_state": "NOT_CONNECTED"},
+    {"code": "MISSING_SCOPES", "category": "auth", "retryable": false, "bridge_error_class": "AUTH_REQUIRED", "capability_state": "MISSING_SCOPES"},
+    {"code": "REAUTH_REQUIRED", "category": "auth", "retryable": false, "bridge_error_class": "AUTH_REQUIRED"},
+    {"code": "ACCOUNT_ROLE_INSUFFICIENT", "category": "auth", "retryable": false, "bridge_error_class": "PERMISSION_DENIED", "capability_state": "ACCOUNT_ROLE_INSUFFICIENT"},
+    {"code": "VAULT_LOCKED", "category": "auth", "retryable": false, "bridge_error_class": "USER_INTERVENTION"},
+    {"code": "APP_APPROVAL_REQUIRED", "category": "policy", "retryable": false, "bridge_error_class": "PERMISSION_DENIED", "capability_state": "APP_APPROVAL_REQUIRED"},
+    {"code": "PROHIBITED", "category": "policy", "retryable": false, "bridge_error_class": "PERMISSION_DENIED", "capability_state": "PROHIBITED"},
+    {"code": "MANUAL_ONLY", "category": "policy", "retryable": false, "bridge_error_class": "MISSING_CAPABILITY", "capability_state": "MANUAL_ONLY"},
+    {"code": "ACCOUNT_TYPE_UNSUPPORTED", "category": "unsupported", "retryable": false, "bridge_error_class": "MISSING_CAPABILITY", "capability_state": "ACCOUNT_TYPE_UNSUPPORTED"},
+    {"code": "UNVERIFIED", "category": "unsupported", "retryable": false, "bridge_error_class": "MISSING_CAPABILITY", "capability_state": "UNVERIFIED"},
+    {"code": "UNSUPPORTED", "category": "unsupported", "retryable": false, "bridge_error_class": "MISSING_CAPABILITY", "capability_state": "UNSUPPORTED"},
+    {"code": "RATE_LIMITED", "category": "rate", "retryable": true, "bridge_error_class": "PRECONDITION_FAILED", "capability_state": "RATE_LIMITED"},
+    {"code": "COST_LIMITED", "category": "cost", "retryable": false, "bridge_error_class": "PRECONDITION_FAILED", "capability_state": "COST_LIMITED"},
+    {"code": "APPROVAL_REQUIRED", "category": "approval", "retryable": false, "bridge_error_class": "USER_INTERVENTION", "capability_state": "NEEDS_APPROVAL"},
+    {"code": "APPROVAL_INVALID", "category": "approval", "retryable": false, "bridge_error_class": "USER_INTERVENTION"},
+    {"code": "PLAN_CHANGED", "category": "conflict", "retryable": false, "bridge_error_class": "PRECONDITION_FAILED"},
+    {"code": "IDEMPOTENCY_CONFLICT", "category": "conflict", "retryable": false, "bridge_error_class": "PRECONDITION_FAILED"},
+    {"code": "PROVIDER_UNAVAILABLE", "category": "provider", "retryable": true, "bridge_error_class": "TOOL_ERROR", "capability_state": "PROVIDER_UNAVAILABLE"},
+    {"code": "PROVIDER_ERROR", "category": "provider", "retryable": false, "bridge_error_class": "TOOL_ERROR"},
+    {"code": "INVALID_PROVIDER_RESPONSE", "category": "provider", "retryable": false, "bridge_error_class": "INVALID_OUTPUT"},
+    {"code": "OUTCOME_UNKNOWN", "category": "unknown", "retryable": false, "bridge_error_class": "UNKNOWN_SIDE_EFFECT"},
+    {"code": "INTERNAL_ERROR", "category": "unknown", "retryable": false, "bridge_error_class": "TOOL_ERROR"}
+  ],
+  "tools": [
+    {"n": 1, "name": "social_auth_connect", "spec_name": "social.auth.connect", "risk": "LOCAL_WRITE", "approval": "none", "side_effect": "account_link", "operations": ["auth.connect"], "route": {"kind": "workflow", "workflow": "oauth.connect@1"}},
+    {"n": 2, "name": "social_auth_status", "spec_name": "social.auth.status", "risk": "READ", "approval": "none", "side_effect": "none", "operations": ["auth.status"], "route": {"kind": "direct"}},
+    {"n": 3, "name": "social_auth_disconnect", "spec_name": "social.auth.disconnect", "risk": "EXTERNAL_WRITE", "approval": "required", "side_effect": "destructive", "operations": ["auth.revoke"], "modes": ["plan", "execute"], "route": {"kind": "workflow", "workflow": "auth.disconnect@1"}},
+    {"n": 4, "name": "social_accounts_list", "spec_name": "social.accounts.list", "risk": "READ", "approval": "none", "side_effect": "none", "operations": ["account.read"], "route": {"kind": "direct"}},
+    {"n": 5, "name": "social_capabilities_get", "spec_name": "social.capabilities.get", "risk": "READ", "approval": "none", "side_effect": "none", "operations": ["capability.read"], "route": {"kind": "direct"}},
+    {"n": 6, "name": "social_content_list", "spec_name": "social.content.list", "risk": "READ", "approval": "none", "side_effect": "none", "operations": ["content.read"], "route": {"kind": "direct"}},
+    {"n": 7, "name": "social_content_get", "spec_name": "social.content.get", "risk": "READ", "approval": "none", "side_effect": "none", "operations": ["content.read"], "route": {"kind": "direct"}},
+    {"n": 8, "name": "social_content_create", "spec_name": "social.content.create", "risk": "LOCAL_WRITE", "approval": "none", "side_effect": "local_state", "operations": ["content.draft"], "route": {"kind": "skill", "skill": "content.prepare"}},
+    {"n": 9, "name": "social_content_publish", "spec_name": "social.content.publish", "risk": "EXTERNAL_WRITE", "approval": "required", "side_effect": "public_write", "operations": ["content.publish.text", "content.publish.image", "content.publish.video", "media.upload"], "modes": ["plan", "execute"], "route": {"kind": "skill_map", "operation": "content.publish"}},
+    {"n": 10, "name": "social_content_update", "spec_name": "social.content.update", "risk": "EXTERNAL_WRITE", "approval": "required", "side_effect": "public_write", "operations": ["content.update"], "modes": ["plan", "execute"], "route": {"kind": "workflow", "workflow": "content.mutate@1"}},
+    {"n": 11, "name": "social_content_delete", "spec_name": "social.content.delete", "risk": "EXTERNAL_WRITE", "approval": "required", "side_effect": "destructive", "operations": ["content.delete"], "modes": ["plan", "execute"], "route": {"kind": "workflow", "workflow": "content.mutate@1"}},
+    {"n": 12, "name": "social_engagement_list", "spec_name": "social.engagement.list", "risk": "READ", "approval": "none", "side_effect": "none", "operations": ["engagement.read"], "route": {"kind": "direct"}},
+    {"n": 13, "name": "social_engagement_execute", "spec_name": "social.engagement.execute", "risk": "EXTERNAL_WRITE", "approval": "required", "side_effect": "public_write", "operations": ["engagement.reply", "engagement.react", "engagement.hide"], "modes": ["plan", "execute"], "route": {"kind": "skill", "skill": "engagement.respond"}},
+    {"n": 14, "name": "social_search", "spec_name": "social.search", "risk": "READ", "approval": "none", "side_effect": "none", "operations": ["search.content"], "route": {"kind": "direct"}},
+    {"n": 15, "name": "social_analytics_get", "spec_name": "social.analytics.get", "risk": "READ", "approval": "none", "side_effect": "none", "operations": ["analytics.read"], "route": {"kind": "direct"}},
+    {"n": 16, "name": "social_media_upload", "spec_name": "social.media.upload", "risk": "LOCAL_WRITE", "approval": "none", "side_effect": "local_state", "operations": ["media.stage"], "route": {"kind": "direct"}},
+    {"n": 17, "name": "social_workflows_execute", "spec_name": "social.workflows.execute", "risk": "EXTERNAL_WRITE", "approval": "per_skill", "side_effect": "public_write", "operations": [], "modes": ["plan", "execute"], "route": {"kind": "caller_skill"}},
+    {"n": 18, "name": "social_workflows_status", "spec_name": "social.workflows.status", "risk": "READ", "approval": "none", "side_effect": "none", "operations": ["workflow.read"], "route": {"kind": "direct"}},
+    {"n": 19, "name": "social_workflows_cancel", "spec_name": "social.workflows.cancel", "risk": "LOCAL_WRITE", "approval": "none", "side_effect": "local_state", "operations": ["workflow.cancel"], "route": {"kind": "direct"}},
+    {"n": 20, "name": "social_results_get", "spec_name": "social.results.get", "risk": "READ", "approval": "none", "side_effect": "none", "operations": ["result.read"], "route": {"kind": "direct"}},
+    {"n": 21, "name": "social_approvals_status", "spec_name": "social.approvals.status", "risk": "READ", "approval": "none", "side_effect": "none", "operations": ["approval.read"], "route": {"kind": "direct"}},
+    {"n": 22, "name": "social_system_health", "spec_name": "social.system.health", "risk": "READ", "approval": "none", "side_effect": "none", "operations": ["system.health"], "route": {"kind": "direct"}}
+  ],
+  "skills": [
+    {"id": "account.connect", "version": "1.0.0", "operations": ["auth.connect", "account.read", "capability.read"], "execution": "workflow", "workflow": "oauth.connect@1", "risk": "LOCAL_WRITE", "approval": "none", "failure_policy": "stop"},
+    {"id": "account.inspect", "version": "1.0.0", "operations": ["account.read", "capability.read"], "execution": "direct", "workflow": null, "risk": "READ", "approval": "none", "failure_policy": "per_target_partial_success"},
+    {"id": "account.reauthorize", "version": "1.0.0", "operations": ["auth.connect", "account.read", "capability.read"], "execution": "workflow", "workflow": "oauth.connect@1", "risk": "LOCAL_WRITE", "approval": "none", "failure_policy": "stop"},
+    {"id": "account.audit", "version": "1.0.0", "operations": ["account.read", "capability.read", "system.health"], "execution": "direct", "workflow": null, "risk": "READ", "approval": "none", "failure_policy": "per_target_partial_success"},
+    {"id": "content.prepare", "version": "1.0.0", "operations": ["content.draft", "media.stage"], "execution": "direct", "workflow": null, "risk": "LOCAL_WRITE", "approval": "none", "failure_policy": "stop"},
+    {"id": "content.publish.one", "version": "1.0.0", "operations": ["content.publish.text"], "execution": "workflow", "workflow": "content.publish@1", "risk": "EXTERNAL_WRITE", "approval": "required", "failure_policy": "stop"},
+    {"id": "content.publish.many", "version": "1.0.0", "operations": ["content.publish.text", "content.publish.image", "content.publish.video", "media.upload"], "execution": "workflow", "workflow": "content.crosspost@1", "risk": "EXTERNAL_WRITE", "approval": "required", "failure_policy": "per_target_partial_success"},
+    {"id": "content.publish.media", "version": "1.0.0", "operations": ["media.upload", "content.publish.image", "content.publish.video"], "execution": "workflow", "workflow": "content.media_publish@1", "risk": "EXTERNAL_WRITE", "approval": "required", "failure_policy": "stop"},
+    {"id": "content.schedule", "version": "1.0.0", "operations": ["content.publish.text", "content.publish.image", "content.publish.video", "media.upload"], "execution": "workflow", "workflow": "content.schedule@1", "risk": "EXTERNAL_WRITE", "approval": "required", "failure_policy": "per_target_partial_success"},
+    {"id": "engagement.review", "version": "1.0.0", "operations": ["engagement.read"], "execution": "direct", "workflow": null, "risk": "READ", "approval": "none", "failure_policy": "per_target_partial_success"},
+    {"id": "engagement.respond", "version": "1.0.0", "operations": ["engagement.reply", "engagement.react", "engagement.hide"], "execution": "workflow", "workflow": "engagement.respond@1", "risk": "EXTERNAL_WRITE", "approval": "required", "failure_policy": "per_target_partial_success"},
+    {"id": "analytics.snapshot", "version": "1.0.0", "operations": ["analytics.read"], "execution": "direct", "workflow": null, "risk": "READ", "approval": "none", "failure_policy": "per_target_partial_success"},
+    {"id": "search.crossplatform", "version": "1.0.0", "operations": ["search.content"], "execution": "direct", "workflow": null, "risk": "READ", "approval": "none", "failure_policy": "per_target_partial_success"},
+    {"id": "ops.recover", "version": "1.0.0", "operations": ["reconcile.read"], "execution": "workflow", "workflow": "ops.recover@1", "risk": "LOCAL_WRITE", "approval": "none", "failure_policy": "per_target_partial_success"}
+  ],
+  "skill_routes": {
+    "operation": "content.publish",
+    "dimensions": {"media_kind": ["text", "image", "video"], "target_count": ["one", "many"], "scheduled": ["no", "yes"]},
+    "routes": [
+      {"match": {"media_kind": "text", "target_count": "one", "scheduled": "no"}, "skill": "content.publish.one", "priority": 10},
+      {"match": {"media_kind": "image", "target_count": "one", "scheduled": "no"}, "skill": "content.publish.media", "priority": 10},
+      {"match": {"media_kind": "video", "target_count": "one", "scheduled": "no"}, "skill": "content.publish.media", "priority": 10},
+      {"match": {"media_kind": "*", "target_count": "many", "scheduled": "no"}, "skill": "content.publish.many", "priority": 10},
+      {"match": {"media_kind": "*", "target_count": "*", "scheduled": "yes"}, "skill": "content.schedule", "priority": 20}
+    ]
+  },
+  "workflows": [
+    {"id": "oauth.connect@1", "risk": "LOCAL_WRITE", "steps": [
+      {"id": "preflight", "internal": "preflight"},
+      {"id": "attempt", "op": ["auth.connect"]},
+      {"id": "callback", "internal": "oauth_callback_wait"},
+      {"id": "identity", "op": ["account.read"]},
+      {"id": "capabilities", "op": ["capability.read"]},
+      {"id": "aggregate", "internal": "aggregate"}
+    ]},
+    {"id": "auth.disconnect@1", "risk": "EXTERNAL_WRITE", "steps": [
+      {"id": "preflight", "internal": "preflight"},
+      {"id": "approval", "internal": "approval_gate"},
+      {"id": "intent", "internal": "journal_intent"},
+      {"id": "revoke", "op": ["auth.revoke"]},
+      {"id": "verify", "op": ["reconcile.read"]},
+      {"id": "aggregate", "internal": "aggregate"}
+    ]},
+    {"id": "content.publish@1", "risk": "EXTERNAL_WRITE", "steps": [
+      {"id": "preflight", "internal": "preflight"},
+      {"id": "approval", "internal": "approval_gate"},
+      {"id": "intent", "internal": "journal_intent"},
+      {"id": "publish", "op": ["content.publish.text"]},
+      {"id": "verify", "op": ["reconcile.read"]},
+      {"id": "aggregate", "internal": "aggregate"}
+    ]},
+    {"id": "content.media_publish@1", "risk": "EXTERNAL_WRITE", "steps": [
+      {"id": "preflight", "internal": "preflight"},
+      {"id": "approval", "internal": "approval_gate"},
+      {"id": "upload_intent", "internal": "journal_intent"},
+      {"id": "upload", "op": ["media.upload"]},
+      {"id": "container", "internal": "provider_poll"},
+      {"id": "publish_intent", "internal": "journal_intent"},
+      {"id": "publish", "op": ["content.publish.image", "content.publish.video"]},
+      {"id": "verify", "op": ["reconcile.read"]},
+      {"id": "aggregate", "internal": "aggregate"}
+    ]},
+    {"id": "content.crosspost@1", "risk": "EXTERNAL_WRITE", "steps": [
+      {"id": "preflight", "internal": "preflight"},
+      {"id": "approval", "internal": "approval_gate"},
+      {"id": "fanout", "internal": "fanout", "children": ["content.publish@1", "content.media_publish@1"], "inherits_approval": true},
+      {"id": "aggregate", "internal": "aggregate"}
+    ]},
+    {"id": "content.schedule@1", "risk": "EXTERNAL_WRITE", "steps": [
+      {"id": "preflight", "internal": "preflight"},
+      {"id": "approval", "internal": "approval_gate"},
+      {"id": "wait", "internal": "schedule_wait"},
+      {"id": "fanout", "internal": "fanout", "children": ["content.publish@1", "content.media_publish@1"], "inherits_approval": true},
+      {"id": "aggregate", "internal": "aggregate"}
+    ]},
+    {"id": "content.mutate@1", "risk": "EXTERNAL_WRITE", "steps": [
+      {"id": "preflight", "internal": "preflight"},
+      {"id": "approval", "internal": "approval_gate"},
+      {"id": "intent", "internal": "journal_intent"},
+      {"id": "mutate", "op": ["content.update", "content.delete"]},
+      {"id": "verify", "op": ["reconcile.read"]},
+      {"id": "aggregate", "internal": "aggregate"}
+    ]},
+    {"id": "engagement.respond@1", "risk": "EXTERNAL_WRITE", "steps": [
+      {"id": "preflight", "internal": "preflight"},
+      {"id": "approval", "internal": "approval_gate"},
+      {"id": "intent", "internal": "journal_intent"},
+      {"id": "act", "op": ["engagement.reply", "engagement.react", "engagement.hide"]},
+      {"id": "verify", "op": ["reconcile.read"]},
+      {"id": "aggregate", "internal": "aggregate"}
+    ]},
+    {"id": "ops.recover@1", "risk": "LOCAL_WRITE", "steps": [
+      {"id": "load", "internal": "load_journal"},
+      {"id": "probe", "op": ["reconcile.read"]},
+      {"id": "aggregate", "internal": "aggregate"}
+    ]}
+  ],
+  "resources": [
+    "social://capabilities/providers",
+    "social://capabilities/accounts/{accountId}",
+    "social://operations/{operationId}",
+    "social://skills",
+    "social://skills/{skillId}",
+    "social://workflows",
+    "social://workflows/{workflowId}",
+    "social://results/{ref}",
+    "social://policies/{provider}"
+  ],
+  "prompts": ["social_select_tool", "social_prepare_content", "social_review_publish", "social_diagnose"],
+  "migrations": ["0001_core", "0002_workflows", "0003_approvals_usage", "0004_acceptance", "0005_standing_grants", "0006_evidence_signoffs"],
+  "tables": [
+    {"name": "schema_meta", "migration": "0001_core", "secret": false, "encrypted_columns": []},
+    {"name": "provider_apps", "migration": "0001_core", "secret": false, "encrypted_columns": []},
+    {"name": "connected_accounts", "migration": "0001_core", "secret": false, "encrypted_columns": []},
+    {"name": "oauth_attempts", "migration": "0001_core", "secret": true, "encrypted_columns": ["encrypted_verifier"]},
+    {"name": "oauth_grants", "migration": "0001_core", "secret": true, "encrypted_columns": ["encrypted_tokens"]},
+    {"name": "capability_snapshots", "migration": "0001_core", "secret": false, "encrypted_columns": []},
+    {"name": "audit_events", "migration": "0001_core", "secret": false, "encrypted_columns": []},
+    {"name": "content_drafts", "migration": "0002_workflows", "secret": false, "encrypted_columns": []},
+    {"name": "media_assets", "migration": "0002_workflows", "secret": false, "encrypted_columns": []},
+    {"name": "workflow_runs", "migration": "0002_workflows", "secret": false, "encrypted_columns": []},
+    {"name": "workflow_steps", "migration": "0002_workflows", "secret": false, "encrypted_columns": []},
+    {"name": "execution_plans", "migration": "0002_workflows", "secret": false, "encrypted_columns": []},
+    {"name": "operation_intents", "migration": "0002_workflows", "secret": false, "encrypted_columns": []},
+    {"name": "worker_leases", "migration": "0002_workflows", "secret": false, "encrypted_columns": []},
+    {"name": "approvals", "migration": "0003_approvals_usage", "secret": false, "encrypted_columns": []},
+    {"name": "provider_budgets", "migration": "0003_approvals_usage", "secret": false, "encrypted_columns": []},
+    {"name": "cached_results", "migration": "0003_approvals_usage", "secret": true, "encrypted_columns": ["encrypted_payload"]},
+    {"name": "operation_acceptance", "migration": "0004_acceptance", "secret": false, "encrypted_columns": []},
+    {"name": "standing_grants", "migration": "0005_standing_grants", "secret": false, "encrypted_columns": []},
+    {"name": "standing_grant_uses", "migration": "0005_standing_grants", "secret": false, "encrypted_columns": []},
+    {"name": "evidence_signoffs", "migration": "0006_evidence_signoffs", "secret": false, "encrypted_columns": []}
+  ]
+}

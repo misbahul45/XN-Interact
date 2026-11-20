@@ -1,0 +1,20 @@
+{
+  "id": "ops.recover@1",
+  "risk": "LOCAL_WRITE",
+  "steps": [
+    {
+      "id": "load",
+      "internal": "load_journal"
+    },
+    {
+      "id": "probe",
+      "op": [
+        "reconcile.read"
+      ]
+    },
+    {
+      "id": "aggregate",
+      "internal": "aggregate"
+    }
+  ]
+}

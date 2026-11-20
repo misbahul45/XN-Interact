@@ -1,0 +1,40 @@
+{
+  "id": "engagement.respond",
+  "version": "1.0.0",
+  "operations": [
+    "engagement.reply",
+    "engagement.react",
+    "engagement.hide"
+  ],
+  "execution": "workflow",
+  "workflow": "engagement.respond@1",
+  "risk": "EXTERNAL_WRITE",
+  "approval": "trusted_user_plan_hash",
+  "targets": "explicit_account_ids",
+  "failure_policy": "per_target_partial_success",
+  "compensate": "none",
+  "output_profile": "compact",
+  "input": {
+    "account_id": {
+      "type": "string",
+      "required": true
+    },
+    "action": {
+      "type": "string",
+      "required": true,
+      "enum": [
+        "reply",
+        "react",
+        "hide"
+      ]
+    },
+    "target_id": {
+      "type": "string",
+      "required": true
+    },
+    "text": {
+      "type": "string",
+      "max_length": 2000
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "auth.disconnect@1",
+  "risk": "EXTERNAL_WRITE",
+  "steps": [
+    {
+      "id": "preflight",
+      "internal": "preflight"
+    },
+    {
+      "id": "approval",
+      "internal": "approval_gate"
+    },
+    {
+      "id": "intent",
+      "internal": "journal_intent"
+    },
+    {
+      "id": "revoke",
+      "op": [
+        "auth.revoke"
+      ]
+    },
+    {
+      "id": "verify",
+      "op": [
+        "reconcile.read"
+      ]
+    },
+    {
+      "id": "aggregate",
+      "internal": "aggregate"
+    }
+  ]
+}

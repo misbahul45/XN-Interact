@@ -1,0 +1,28 @@
+{
+  "id": "account.connect",
+  "version": "1.0.0",
+  "operations": [
+    "auth.connect",
+    "account.read",
+    "capability.read"
+  ],
+  "execution": "workflow",
+  "workflow": "oauth.connect@1",
+  "risk": "LOCAL_WRITE",
+  "approval": "none",
+  "targets": "none",
+  "failure_policy": "stop",
+  "compensate": "none",
+  "output_profile": "compact",
+  "input": {
+    "provider": {
+      "type": "string",
+      "required": true,
+      "max_length": 32
+    },
+    "operations": {
+      "type": "string[]",
+      "max_items": 30
+    }
+  }
+}

@@ -1,0 +1,15 @@
+[Unit]
+Description=XN-Interact workflow worker (runs due scheduled and pending social workflows)
+After=graphical-session.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/code/XN-Interact
+ExecStart=%h/.bun/bin/bun run %h/code/XN-Interact/src/cli.ts worker
+Restart=on-failure
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=default.target

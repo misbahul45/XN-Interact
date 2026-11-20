@@ -1,0 +1,36 @@
+{
+  "id": "oauth.connect@1",
+  "risk": "LOCAL_WRITE",
+  "steps": [
+    {
+      "id": "preflight",
+      "internal": "preflight"
+    },
+    {
+      "id": "attempt",
+      "op": [
+        "auth.connect"
+      ]
+    },
+    {
+      "id": "callback",
+      "internal": "oauth_callback_wait"
+    },
+    {
+      "id": "identity",
+      "op": [
+        "account.read"
+      ]
+    },
+    {
+      "id": "capabilities",
+      "op": [
+        "capability.read"
+      ]
+    },
+    {
+      "id": "aggregate",
+      "internal": "aggregate"
+    }
+  ]
+}

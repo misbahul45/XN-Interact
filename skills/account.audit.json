@@ -1,0 +1,18 @@
+{
+  "id": "account.audit",
+  "version": "1.0.0",
+  "operations": [
+    "account.read",
+    "capability.read",
+    "system.health"
+  ],
+  "execution": "direct",
+  "workflow": null,
+  "risk": "READ",
+  "approval": "none",
+  "targets": "none",
+  "failure_policy": "per_target_partial_success",
+  "compensate": "none",
+  "output_profile": "compact",
+  "input": {}
+}

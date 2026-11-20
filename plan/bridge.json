@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "bridge_repo": "~/code/XN-Bridge",
+  "observed": {
+    "date": "2026-11-19",
+    "sources": [
+      "XN-Bridge src/xnbridge/server.py (13 tools, Risk/Origin/Outcome/ErrorClass literals)",
+      "XN-Bridge src/xnbridge/executions.py (ERROR_CLASSES, EXTERNAL_WRITE begin needs approval or unattended mode)",
+      "XN-Bridge src/xnbridge/security.py (RiskClassifier first-match, fail-closed EXTERNAL_WRITE; origin_of needs http(s) URL)",
+      "XN-Bridge src/xnbridge/approval.py (Ed25519 signed statement over approval_id, workflow_id, action_kind, target, payload_digest, expires_at)",
+      "XN-Bridge src/xnbridge/defaults/capabilities.toml and policy.toml",
+      "XN-Bridge AGENTS.md (standing autonomy is career-scoped)"
+    ]
+  },
+  "bridge_contract": {
+    "risks": ["READ", "LOCAL_WRITE", "EXTERNAL_WRITE"],
+    "outcomes": ["SUCCEEDED", "FAILED", "OUTCOME_UNKNOWN"],
+    "evidence_origins": ["tool_output", "local_file", "user_statement", "model_summary"],
+    "error_classes": [
+      "TRANSPORT", "TOOL_ERROR", "INVALID_OUTPUT", "MISSING_CAPABILITY", "PERMISSION_DENIED", "AUTH_REQUIRED",
+      "STALE_EVIDENCE", "USER_INTERVENTION", "UNKNOWN_SIDE_EFFECT", "PRECONDITION_FAILED", "ABORTED_BEFORE_SEND", "NONE"
+    ],
+    "tools_used": [
+      "bridge_status", "route_intent", "workflow_create", "workflow_get", "workflow_checkpoint", "workflow_resume",
+      "capability_resolve", "approval_prepare", "approval_status", "execution_record", "evidence_register", "domain_action"
+    ]
+  },
+  "server": "xn-interact",
+  "capabilities": [
+    {"id": "social.account.connect", "tools": ["social_auth_connect"], "cost": "FREE_LOCAL", "description": "Start or upgrade official OAuth consent for a social account", "degraded": "XN-Interact unavailable. The user connects nothing; never ask for passwords or tokens."},
+    {"id": "social.account.status", "tools": ["social_auth_status"], "cost": "FREE_LOCAL", "description": "Poll OAuth attempt and grant health", "degraded": "Report connection state as unknown."},
+    {"id": "social.account.disconnect", "tools": ["social_auth_disconnect"], "cost": "PROVIDER_METERED", "description": "Revoke a social grant and purge it locally", "degraded": "Tell the user to revoke access in the provider's account settings."},
+    {"id": "social.account.list", "tools": ["social_accounts_list"], "cost": "FREE_LOCAL", "description": "List connected social accounts", "degraded": "No account list; ask the user which account they mean and do not act."},
+    {"id": "social.capability.read", "tools": ["social_capabilities_get"], "cost": "FREE_LOCAL", "description": "Resolved per-account capability verdicts", "degraded": "Treat every operation as UNVERIFIED; do not attempt writes."},
+    {"id": "social.content.read", "tools": ["social_content_list", "social_content_get"], "cost": "PROVIDER_METERED", "description": "Read authorized posts", "degraded": "Ask the user to paste the post text or link."},
+    {"id": "social.content.draft", "tools": ["social_content_create"], "cost": "FREE_LOCAL", "description": "Prepare a local cross-platform draft and preview", "degraded": "Keep the draft as text in the workflow; nothing is published."},
+    {"id": "social.content.publish", "tools": ["social_content_publish"], "cost": "PROVIDER_METERED", "description": "Publish approved content to explicit accounts", "degraded": "Deliver the prepared draft; the user publishes manually."},
+    {"id": "social.content.update", "tools": ["social_content_update"], "cost": "PROVIDER_METERED", "description": "Edit owned content where supported", "degraded": "The user edits the post manually."},
+    {"id": "social.content.delete", "tools": ["social_content_delete"], "cost": "PROVIDER_METERED", "description": "Delete owned content", "degraded": "The user deletes the post manually."},
+    {"id": "social.engagement.read", "tools": ["social_engagement_list"], "cost": "PROVIDER_METERED", "description": "Read comments, replies and reactions", "degraded": "Ask the user to paste the comments."},
+    {"id": "social.engagement.act", "tools": ["social_engagement_execute"], "cost": "PROVIDER_METERED", "description": "Approved reply, react or hide", "degraded": "Draft the reply; the user posts it manually."},
+    {"id": "social.search", "tools": ["social_search"], "cost": "PROVIDER_METERED", "description": "Provider-allowed search", "degraded": "Use web.search and label results as unverified leads."},
+    {"id": "social.analytics.read", "tools": ["social_analytics_get"], "cost": "PROVIDER_METERED", "description": "Structured metrics with provenance", "degraded": "Ask the user for an exported report; never estimate metrics."},
+    {"id": "social.media.stage", "tools": ["social_media_upload"], "cost": "FREE_LOCAL", "description": "Validate and stage local media in the sandbox", "degraded": "Text-only content; the user attaches media manually."},
+    {"id": "social.workflow.run", "tools": ["social_workflows_execute"], "cost": "PROVIDER_METERED", "description": "Plan or execute a declared XN-Interact skill", "degraded": "Run the steps manually with the user."},
+    {"id": "social.workflow.status", "tools": ["social_workflows_status", "social_results_get"], "cost": "FREE_LOCAL", "description": "XN-Interact run state and scoped results", "degraded": "Report the run outcome as unknown and reconcile."},
+    {"id": "social.workflow.cancel", "tools": ["social_workflows_cancel"], "cost": "FREE_LOCAL", "description": "Stop future XN-Interact steps", "degraded": "Tell the user cancellation could not be recorded."},
+    {"id": "social.approval.status", "tools": ["social_approvals_status"], "cost": "FREE_LOCAL", "description": "Read XN-Interact human approval decisions", "degraded": "Treat the approval as not granted."},
+    {"id": "social.health", "tools": ["social_system_health"], "cost": "FREE_LOCAL", "description": "Vault, provider, workflow and quota readiness", "degraded": "Treat XN-Interact as unavailable."}
+  ],
+  "risk_rules": [
+    {"server": "xn-interact", "tool": "social_auth_connect", "risk": "LOCAL_WRITE"},
+    {"server": "xn-interact", "tool": "social_auth_status", "risk": "READ"},
+    {"server": "xn-interact", "tool": "social_auth_disconnect", "risk": "EXTERNAL_WRITE"},
+    {"server": "xn-interact", "tool": "social_accounts_list", "risk": "READ"},
+    {"server": "xn-interact", "tool": "social_capabilities_get", "risk": "READ"},
+    {"server": "xn-interact", "tool": "social_content_list", "risk": "READ"},
+    {"server": "xn-interact", "tool": "social_content_get", "risk": "READ"},
+    {"server": "xn-interact", "tool": "social_content_create", "risk": "LOCAL_WRITE"},
+    {"server": "xn-interact", "tool": "social_content_publish", "risk": "EXTERNAL_WRITE"},
+    {"server": "xn-interact", "tool": "social_content_update", "risk": "EXTERNAL_WRITE"},
+    {"server": "xn-interact", "tool": "social_content_delete", "risk": "EXTERNAL_WRITE"},
+    {"server": "xn-interact", "tool": "social_engagement_list", "risk": "READ"},
+    {"server": "xn-interact", "tool": "social_engagement_execute", "risk": "EXTERNAL_WRITE"},
+    {"server": "xn-interact", "tool": "social_search", "risk": "READ"},
+    {"server": "xn-interact", "tool": "social_analytics_get", "risk": "READ"},
+    {"server": "xn-interact", "tool": "social_media_upload", "risk": "LOCAL_WRITE"},
+    {"server": "xn-interact", "tool": "social_workflows_execute", "risk": "EXTERNAL_WRITE"},
+    {"server": "xn-interact", "tool": "social_workflows_status", "risk": "READ"},
+    {"server": "xn-interact", "tool": "social_workflows_cancel", "risk": "LOCAL_WRITE"},
+    {"server": "xn-interact", "tool": "social_results_get", "risk": "READ"},
+    {"server": "xn-interact", "tool": "social_approvals_status", "risk": "READ"},
+    {"server": "xn-interact", "tool": "social_system_health", "risk": "READ"},
+    {"server": "xn-interact", "tool": "*", "risk": "EXTERNAL_WRITE"}
+  ],
+  "outcome_map": [
+    {"run_state": "succeeded", "outcome": "SUCCEEDED", "error_class": "NONE", "note": "All targets succeeded with provider evidence"},
+    {"run_state": "partially_succeeded", "outcome": "SUCCEEDED", "error_class": "NONE", "note": "Known partial result; detail.partial=true and per-target outcomes go to evidence. Failed targets need a new plan and new approvals."},
+    {"run_state": "failed", "outcome": "FAILED", "error_class": "FROM_ERROR_CODE", "note": "Nothing was sent or every send failed with evidence; use the error code's bridge_error_class"},
+    {"run_state": "unsupported", "outcome": "FAILED", "error_class": "MISSING_CAPABILITY", "note": "Preflight refused; nothing was sent"},
+    {"run_state": "unknown_outcome", "outcome": "OUTCOME_UNKNOWN", "error_class": "UNKNOWN_SIDE_EFFECT", "note": "Never retry; reconcile with ops.recover then execution_record op=reconcile"},
+    {"run_state": "cancelled", "outcome": "FAILED", "error_class": "ABORTED_BEFORE_SEND", "note": "Only when no target was sent; if any target was sent, report partially_succeeded instead"}
+  ],
+  "approval_convention": {
+    "authoritative": "xn-interact",
+    "rule": "XN-Interact executes a social write only with its own granted, unconsumed, plan-hash-matching approval. A bridge approval or bridge unattended mode never substitutes for it.",
+    "r1_mode": "dual_gate",
+    "action_kind_template": "social.{tool}",
+    "target_template": "https://xn-interact.invalid/plans/{plan_id}",
+    "payload_fields": ["plan_id", "plan_hash", "operation", "account_ids", "content_digest", "interact_approval_id", "expires_at"],
+    "later_option": "INT-10 approval federation, only after a threat model"
+  },
+  "evidence_convention": {
+    "origin": "tool_output",
+    "source_ref": "Provider canonical URL when XN-Interact returns one, else social://results/{ref}",
+    "verification": "VERIFIED only for content captured from the XN-Interact tool output; summaries stay INFERRED",
+    "ttl_class": "default"
+  },
+  "domain": {
+    "name": "social",
+    "version": 1,
+    "skill": "xn-social",
+    "description": "Connect, inspect, prepare, act on and verify social accounts through XN-Interact",
+    "stages": [
+      {"name": "connect", "goal": "Connect or reauthorize the accounts the task needs", "capabilities": [], "optional_capabilities": ["social.account.connect", "social.account.status"], "risk": "LOCAL_WRITE", "optional": true, "actions": []},
+      {"name": "inspect", "goal": "Resolve explicit target accounts and their capability verdicts", "capabilities": ["social.account.list", "social.capability.read"], "optional_capabilities": ["social.health"], "risk": "READ", "optional": false, "actions": ["targets.set"]},
+      {"name": "collect", "goal": "Read content, engagement, search results or analytics", "capabilities": [], "optional_capabilities": ["social.content.read", "social.engagement.read", "social.search", "social.analytics.read"], "risk": "READ", "optional": true, "actions": []},
+      {"name": "prepare", "goal": "Prepare a local draft, media and per-provider previews", "capabilities": [], "optional_capabilities": ["social.content.draft", "social.media.stage"], "risk": "LOCAL_WRITE", "optional": true, "actions": []},
+      {"name": "act", "goal": "Plan, obtain both approvals, execute once and record the attempt", "capabilities": [], "optional_capabilities": ["social.content.publish", "social.content.update", "social.content.delete", "social.engagement.act", "social.workflow.run", "social.workflow.cancel", "social.account.disconnect", "social.approval.status"], "risk": "EXTERNAL_WRITE", "optional": true, "actions": ["plan.record"]},
+      {"name": "verify", "goal": "Record per-target outcomes and evidence", "capabilities": ["social.workflow.status"], "optional_capabilities": ["social.content.read", "social.approval.status"], "risk": "READ", "optional": false, "actions": ["result.record"]}
+    ],
+    "actions": [
+      {"name": "targets.set", "stage": "inspect", "risk": "LOCAL_WRITE", "payload_fields": ["account_ids", "providers"]},
+      {"name": "plan.record", "stage": "act", "risk": "LOCAL_WRITE", "payload_fields": ["plan_id", "plan_hash", "operation", "account_ids", "interact_approval_id", "bridge_approval_id"], "safe_when_pending": true},
+      {"name": "result.record", "stage": "verify", "risk": "LOCAL_WRITE", "payload_fields": ["plan_id", "run_id", "run_state", "targets"]}
+    ]
+  },
+  "routing": {
+    "precedence": ["career", "social", "research"],
+    "career_guard_terms": ["lowongan", "magang", "internship", "intern", "pkl", "job", "jobs", "apply", "melamar", "lamar", "cv", "resume", "rekrutmen", "hiring"],
+    "provider_terms": ["linkedin", "instagram", "ig", "tiktok", "twitter", "x.com", "threads", "reddit", "facebook", "fb", "sosmed", "media sosial", "social media"],
+    "intents": [
+      {"key": "social.connect", "stage": "connect", "terms": ["connect", "hubungkan", "sambungkan", "login", "authorize", "otorisasi", "reauth"]},
+      {"key": "social.publish", "stage": "prepare", "terms": ["post", "posting", "publish", "unggah", "share", "bagikan", "crosspost", "jadwalkan", "schedule"]},
+      {"key": "social.engage", "stage": "collect", "terms": ["comment", "komentar", "reply", "balas", "react", "like", "hide", "moderasi"]},
+      {"key": "social.analytics", "stage": "collect", "terms": ["analytics", "insight", "insights", "statistik", "metrics", "followers", "impressions", "reach"]},
+      {"key": "social.inspect", "stage": "inspect", "terms": ["akun", "accounts", "capabilities", "kemampuan", "status"]}
+    ],
+    "cases": [
+      {"text": "posting ke linkedin dan threads: rilis fitur baru", "expect": "social.publish"},
+      {"text": "balas komentar terbaru di instagram", "expect": "social.engage"},
+      {"text": "lihat analytics tiktok minggu ini", "expect": "social.analytics"},
+      {"text": "hubungkan akun reddit saya", "expect": "social.connect"},
+      {"text": "cari lowongan magang backend di linkedin", "expect": "career"},
+      {"text": "apply internship lewat linkedin", "expect": "career"}
+    ]
+  }
+}

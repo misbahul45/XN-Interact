@@ -1,0 +1,22 @@
+{
+  "id": "account.inspect",
+  "version": "1.0.0",
+  "operations": [
+    "account.read",
+    "capability.read"
+  ],
+  "execution": "direct",
+  "workflow": null,
+  "risk": "READ",
+  "approval": "none",
+  "targets": "explicit_account_ids",
+  "failure_policy": "per_target_partial_success",
+  "compensate": "none",
+  "output_profile": "compact",
+  "input": {
+    "account_id": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

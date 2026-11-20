@@ -1,0 +1,49 @@
+{
+  "id": "content.media_publish@1",
+  "risk": "EXTERNAL_WRITE",
+  "steps": [
+    {
+      "id": "preflight",
+      "internal": "preflight"
+    },
+    {
+      "id": "approval",
+      "internal": "approval_gate"
+    },
+    {
+      "id": "upload_intent",
+      "internal": "journal_intent"
+    },
+    {
+      "id": "upload",
+      "op": [
+        "media.upload"
+      ]
+    },
+    {
+      "id": "container",
+      "internal": "provider_poll"
+    },
+    {
+      "id": "publish_intent",
+      "internal": "journal_intent"
+    },
+    {
+      "id": "publish",
+      "op": [
+        "content.publish.image",
+        "content.publish.video"
+      ]
+    },
+    {
+      "id": "verify",
+      "op": [
+        "reconcile.read"
+      ]
+    },
+    {
+      "id": "aggregate",
+      "internal": "aggregate"
+    }
+  ]
+}

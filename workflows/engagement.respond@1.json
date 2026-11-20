@@ -1,0 +1,36 @@
+{
+  "id": "engagement.respond@1",
+  "risk": "EXTERNAL_WRITE",
+  "steps": [
+    {
+      "id": "preflight",
+      "internal": "preflight"
+    },
+    {
+      "id": "approval",
+      "internal": "approval_gate"
+    },
+    {
+      "id": "intent",
+      "internal": "journal_intent"
+    },
+    {
+      "id": "act",
+      "op": [
+        "engagement.reply",
+        "engagement.react",
+        "engagement.hide"
+      ]
+    },
+    {
+      "id": "verify",
+      "op": [
+        "reconcile.read"
+      ]
+    },
+    {
+      "id": "aggregate",
+      "internal": "aggregate"
+    }
+  ]
+}
