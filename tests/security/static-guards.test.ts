@@ -17,12 +17,12 @@ describe("static guards", () => {
   test("no model SDK, browser automation, frontend or extra infrastructure dependency", () => {
     const pkg = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8"));
     const deps = Object.keys({ ...pkg.dependencies });
-    expect(deps.sort()).toEqual(["@modelcontextprotocol/server", "zod"]);
+    expect(deps.sort()).toEqual(["@modelcontextprotocol/server", "playwright-core", "zod"]);
     for (const f of SRC) expect(FORBIDDEN_PACKAGES.test(readFileSync(f, "utf8").match(/from\s+["'][^"']+["']/g)?.join("\n") ?? "")).toBe(false);
   });
 
   test("network calls only in the provider transport and the callback peer ping", () => {
-    const allowed = new Set(["src/transport/provider-http.ts", "src/identity/callback-listener.ts"]);
+    const allowed = new Set(["src/transport/provider-http.ts", "src/identity/callback-listener.ts", "src/browser/ipc.ts", "src/browser/daemon.ts", "src/reader/web-reader.ts"]);
     for (const f of SRC) {
       const text = readFileSync(f, "utf8");
       if (/\bfetch\s*\(|new\s+WebSocket|Bun\.connect|node:net|node:http/.test(text)) expect(allowed.has(relative(ROOT, f))).toBe(true);
@@ -45,5 +45,12 @@ describe("static guards", () => {
     const { loadConfig } = await import("../../src/bootstrap/config.ts");
     expect(() => loadConfig({ XN_INTERACT_FIXTURE_PROVIDER: "1" })).toThrow();
     expect(() => loadConfig({ XN_INTERACT_KEYRING: "memory" })).toThrow();
+  });
+
+  test("headless broker cannot export browser secrets or run caller scripts", () => {
+    for (const file of SRC.filter((f) => /\/src\/(browser|extraction)\//.test(f))) {
+      const contents = readFileSync(file, "utf8");
+      expect(/\.cookies\(|addCookies|storageState|localStorage|sessionStorage|connectOverCDP|setExtraHTTPHeaders|request\.headers\(|\.screenshot\(|\.setInputFiles\(|\.fill\(/.test(contents), file).toBe(false);
+    }
   });
 });

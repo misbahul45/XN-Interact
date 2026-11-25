@@ -2,6 +2,7 @@ import { join } from "node:path";
 import { type Config, ensureHome } from "./bootstrap/config.ts";
 import { Drafts } from "./content/drafts.ts";
 import { MediaSandbox } from "./content/media.ts";
+import { ExtractionStore } from "./extraction/store.ts";
 import { AccountRegistry } from "./identity/account-registry.ts";
 import { AppSecrets } from "./identity/app-secrets.ts";
 import { CallbackListener } from "./identity/callback-listener.ts";
@@ -68,6 +69,7 @@ export class App {
   readonly plans: Plans;
   readonly approvals: Approvals;
   readonly results: Results;
+  readonly extraction: ExtractionStore;
   readonly leases: Leases;
   readonly engine: WorkflowEngine;
   readonly skills: SkillRegistry;
@@ -81,6 +83,7 @@ export class App {
     ensureHome(config);
     this.db = new Db(config.dbPath);
     this.migrations = migrate(this.db, config.dbPath).current;
+    this.extraction = new ExtractionStore(this.db, config.env === "test");
     this.keyring = opts.keyring ?? (config.keyring === "memory" ? new MemoryKeyring() : config.keyring === "file" ? new FileKeyring(join(config.home, "test-keyring.json")) : new OsKeyring());
     this.vault = new Vault(this.keyring);
     this.audit = new Audit(this.db);
@@ -113,7 +116,7 @@ export class App {
     this.grants = new Grants(this.db);
     this.signoffs = new Signoffs(this.db);
     this.resolver = new CapabilityResolver(this.db, this.providers, this.accounts, this.apps, this.budget, undefined, undefined, this.acceptance, this.signoffs);
-    this.media = new MediaSandbox(this.db, config.mediaRoots, config.mediaDir);
+    this.media = new MediaSandbox(this.db, config.mediaRoots, config.mediaDir, [join(config.home, "browser"), join(config.home, "datasets")]);
     this.drafts = new Drafts(this.db, this.media);
     this.plans = new Plans(this.db);
     this.approvals = new Approvals(this.db);

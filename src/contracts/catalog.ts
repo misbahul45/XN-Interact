@@ -4,7 +4,7 @@ export type Risk = "READ" | "LOCAL_WRITE" | "EXTERNAL_WRITE";
 
 export interface CatalogOperation {
   id: string;
-  scope: "local" | "provider";
+  scope: "local" | "provider" | "browser";
   risk: Risk;
   side_effect: string;
   summary: string;

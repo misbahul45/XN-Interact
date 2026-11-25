@@ -24,9 +24,11 @@ describe("token benchmark harness", () => {
   });
 
   test("registry size over real stdio stays inside the regression budget", async () => {
-    const s = registryStats(await listTools());
-    expect(s.tools).toBe(22);
-    expect(s.tokens).toBeLessThan(5000);
+    const tools = await listTools();
+    const s = registryStats(tools);
+    expect(s.tools).toBe(28);
+    expect(registryStats(tools.filter((t) => !/^social_(extract|datasets)_/.test(t.name))).tokens).toBeLessThan(5000);
+    expect(s.tokens).toBeLessThan(6500);
     expect(s.tokens_without_output_schema).toBe(s.tokens);
   }, 60000);
 

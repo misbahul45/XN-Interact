@@ -1,7 +1,9 @@
-import { copyFileSync, existsSync, readFileSync } from "node:fs";
+import { Database } from "bun:sqlite";
+import { existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { CATALOG } from "../contracts/catalog.ts";
 import type { Db } from "./db.ts";
+import { backup, verifyBackup } from "./retention.ts";
 
 export const MIGRATIONS_DIR = resolve(import.meta.dir, "..", "..", "migrations");
 
@@ -15,30 +17,37 @@ function checksum(text: string): string {
 }
 
 export function migrate(db: Db, dbPath: string | null, dir = MIGRATIONS_DIR): MigrationResult {
-  const hasMeta = db.get<{ n: number }>("SELECT count(*) AS n FROM sqlite_master WHERE type='table' AND name='schema_meta'")?.n === 1;
-  const done = new Map<string, string>();
-  if (hasMeta) for (const r of db.all<{ key: string; value: string }>("SELECT key, value FROM schema_meta WHERE key LIKE 'migration:%'")) done.set(r.key.slice(10), r.value);
+  const hasMeta = () => db.get("SELECT 1 FROM sqlite_master WHERE type='table' AND name='schema_meta'") !== null;
+  let needsBackup = Boolean(dbPath && hasMeta());
   const applied: string[] = [];
-  const pending = CATALOG.migrations.filter((m) => !done.has(m));
   for (const name of CATALOG.migrations) {
     const sql = readFileSync(join(dir, `${name}.sql`), "utf8");
     const sum = checksum(sql);
-    const prior = done.get(name);
-    if (prior && prior !== sum) throw new Error(`migration ${name} changed after it was applied (checksum mismatch); restore the original file`);
-  }
-  if (pending.length && done.size && dbPath && existsSync(dbPath)) {
-    db.raw.exec("PRAGMA wal_checkpoint(TRUNCATE)");
-    copyFileSync(dbPath, `${dbPath}.pre-${pending[0]}.bak`);
-  }
-  for (const name of pending) {
-    const sql = readFileSync(join(dir, `${name}.sql`), "utf8");
-    db.tx(() => {
+    const key = `migration:${name}`;
+    const changed = db.tx(() => {
+      const prior = hasMeta() && db.get<{ value: string }>("SELECT value FROM schema_meta WHERE key=?", key);
+      if (prior) {
+        if (prior.value !== sum) throw new Error(`migration ${name} changed after it was applied (checksum mismatch); restore the original file`);
+        return false;
+      }
+      if (needsBackup && dbPath) {
+        const snapshot = `${dbPath}.pre-${name}.bak`;
+        if (existsSync(snapshot)) {
+          if (!verifyBackup(snapshot).ok) throw new Error("the pre-migration snapshot failed integrity verification");
+        } else {
+          const reader = new Database(dbPath, { readonly: true });
+          try { backup({ raw: reader }, snapshot); }
+          finally { reader.close(); }
+        }
+        needsBackup = false;
+      }
       db.raw.exec(sql);
-      db.run("INSERT INTO schema_meta(key, value) VALUES (?, ?)", `migration:${name}`, checksum(sql));
+      db.run("INSERT INTO schema_meta(key, value) VALUES (?, ?)", key, sum);
+      return true;
     });
-    applied.push(name);
+    if (changed) applied.push(name);
   }
-  return { applied, current: CATALOG.migrations.filter((m) => done.has(m) || applied.includes(m)) };
+  return { applied, current: [...CATALOG.migrations] };
 }
 
 export function tableNames(db: Db): string[] {

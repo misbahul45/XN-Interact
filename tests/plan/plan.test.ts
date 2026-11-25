@@ -33,7 +33,7 @@ describe("plan data", () => {
   });
 
   test("catalog sizes match the baseline", () => {
-    expect(base.catalog.tools.length).toBe(22);
+    expect(base.catalog.tools.length).toBe(28);
     expect(base.catalog.skills.length).toBe(14);
     expect(base.catalog.providers.length).toBe(7);
   });

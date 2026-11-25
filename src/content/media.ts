@@ -27,7 +27,7 @@ export interface MediaAsset {
 }
 
 export class MediaSandbox {
-  constructor(private readonly db: Db, private readonly roots: string[], private readonly stageDir: string) {}
+  constructor(private readonly db: Db, private readonly roots: string[], private readonly stageDir: string, private readonly excluded: string[] = []) {}
 
   private inside(real: string): boolean {
     return this.roots.some((root) => {
@@ -52,6 +52,9 @@ export class MediaSandbox {
     if (lst.isSymbolicLink()) throw new GatewayError("PROHIBITED", "symbolic links are refused");
     if (!lst.isFile()) throw new GatewayError("PROHIBITED", "only regular files can be staged");
     const real = realpathSync(path);
+    if (this.excluded.some((directory) => real === directory || real.startsWith(directory + sep))) {
+      throw new GatewayError("PROHIBITED", "protected browser and dataset directories cannot be staged");
+    }
     if (!this.inside(real)) throw new GatewayError("PROHIBITED", "file is outside the configured media roots", { detail: { roots: this.roots } });
     const head = new Uint8Array(16);
     const fd = openSync(real, "r");

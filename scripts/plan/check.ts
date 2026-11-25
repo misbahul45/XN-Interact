@@ -348,7 +348,13 @@ export function check(m: Model): Finding[] {
     if (!c.migrations.includes(t.migration)) err("UNKNOWN_MIGRATION", `table ${t.name}`, t.migration);
     if (t.secret !== t.encrypted_columns.length > 0) err("ENCRYPTION", `table ${t.name}`, "secret tables need encrypted columns and only they have them");
   }
-  for (const mg of c.migrations) if (!c.tables.some((t) => t.migration === mg)) err("EMPTY_MIGRATION", mg, "no table");
+  for (const mg of c.migrations) if (!c.tables.some((t) => t.migration === mg) && !c.migration_updates?.[mg]?.length) err("EMPTY_MIGRATION", mg, "no table change");
+  for (const [mg, names] of Object.entries(c.migration_updates ?? {})) {
+    if (!c.migrations.includes(mg)) err("UNKNOWN_MIGRATION", mg, "table update references unknown migration");
+    for (const name of names) if (!c.tables.some((t) => t.name === name && c.migrations.indexOf(t.migration) < c.migrations.indexOf(mg))) {
+      err("UNKNOWN_TABLE", mg, `table ${name} must already exist`);
+    }
+  }
 
   const pv = m.providers;
   const providerOps = c.operations.filter((o) => o.scope === "provider").map((o) => o.id);
@@ -388,7 +394,7 @@ export function check(m: Model): Finding[] {
   for (const d of dupes(b.capabilities.map((x) => x.id))) err("DUPLICATE_ID", `bridge capability ${d}`, "repeated");
   const mapped = b.capabilities.flatMap((x) => x.tools);
   for (const x of b.capabilities) {
-    if (!x.id.startsWith("social.")) err("BRIDGE_CAPABILITY", x.id, "must start with social.");
+    if (![b.domain.name, b.data_domain.name].some((name) => x.id.startsWith(`${name}.`))) err("BRIDGE_CAPABILITY", x.id, "unknown capability namespace");
     if (!x.degraded) err("BRIDGE_CAPABILITY", x.id, "degraded behaviour required");
     for (const t of x.tools) if (!toolByName.has(t)) err("UNKNOWN_TOOL", `bridge capability ${x.id}`, t);
   }
@@ -431,7 +437,7 @@ export function check(m: Model): Finding[] {
   for (const d of dupes(stageNames)) err("DUPLICATE_ID", `stage ${d}`, "repeated");
   const capIds = new Set(b.capabilities.map((x) => x.id));
   const used = new Set<string>();
-  for (const s of b.domain.stages) {
+  for (const s of [...b.domain.stages, ...b.data_domain.stages]) {
     const where = `bridge stage ${s.name}`;
     const caps = [...s.capabilities, ...s.optional_capabilities];
     for (const cap of caps) {

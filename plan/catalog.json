@@ -6,7 +6,7 @@
     "transport_default": "stdio",
     "home_env": "XN_INTERACT_HOME",
     "tool_name_pattern": "^[a-z][a-z0-9_]{0,63}$",
-    "expected_tool_count": 22,
+    "expected_tool_count": 28,
     "expected_skill_count": 14
   },
   "providers": ["linkedin", "instagram", "tiktok", "x", "threads", "reddit", "facebook"],
@@ -14,7 +14,7 @@
     "risk_class": ["READ", "LOCAL_WRITE", "EXTERNAL_WRITE"],
     "approval_policy": ["none", "required", "per_skill"],
     "side_effect": ["none", "local_state", "account_link", "provider_private", "public_write", "destructive"],
-    "operation_scope": ["local", "provider"],
+    "operation_scope": ["local", "provider", "browser"],
     "capability_state": [
       "AVAILABLE", "NOT_CONNECTED", "MISSING_SCOPES", "APP_APPROVAL_REQUIRED", "ACCOUNT_TYPE_UNSUPPORTED",
       "ACCOUNT_ROLE_INSUFFICIENT", "RATE_LIMITED", "COST_LIMITED", "NEEDS_APPROVAL", "MANUAL_ONLY",
@@ -69,7 +69,13 @@
     {"id": "workflow.cancel", "scope": "local", "risk": "LOCAL_WRITE", "side_effect": "local_state", "summary": "Stop future steps of a run"},
     {"id": "result.read", "scope": "local", "risk": "READ", "side_effect": "none", "summary": "Fetch a scoped cached result"},
     {"id": "approval.read", "scope": "local", "risk": "READ", "side_effect": "none", "summary": "Read approval decisions"},
-    {"id": "system.health", "scope": "local", "risk": "READ", "side_effect": "none", "summary": "Vault, provider, workflow and quota readiness"}
+    {"id": "system.health", "scope": "local", "risk": "READ", "side_effect": "none", "summary": "Vault, provider, workflow and quota readiness"},
+    {"id": "web.feed.read", "scope": "local", "risk": "READ", "side_effect": "none", "summary": "Read opportunity posts from the owner's LinkedIn For-you feed in the reader Chrome"},
+    {"id": "web.jobs.search", "scope": "local", "risk": "READ", "side_effect": "none", "summary": "Read LinkedIn Jobs search results in the reader Chrome"},
+    {"id": "data.collect", "scope": "browser", "risk": "LOCAL_WRITE", "side_effect": "local_state", "summary": "Collect an authorized browser dataset with durable checkpoints"},
+    {"id": "data.source.read", "scope": "local", "risk": "READ", "side_effect": "none", "summary": "List registered browser source scopes and field capabilities"},
+    {"id": "data.dataset.query", "scope": "local", "risk": "READ", "side_effect": "none", "summary": "Query a local dataset by reference"},
+    {"id": "data.dataset.export", "scope": "local", "risk": "LOCAL_WRITE", "side_effect": "local_state", "summary": "Export a dataset inside the protected local data directory"}
   ],
   "error_codes": [
     {"code": "VALIDATION_FAILED", "category": "validation", "retryable": false, "bridge_error_class": "PRECONDITION_FAILED"},
@@ -121,7 +127,13 @@
     {"n": 19, "name": "social_workflows_cancel", "spec_name": "social.workflows.cancel", "risk": "LOCAL_WRITE", "approval": "none", "side_effect": "local_state", "operations": ["workflow.cancel"], "route": {"kind": "direct"}},
     {"n": 20, "name": "social_results_get", "spec_name": "social.results.get", "risk": "READ", "approval": "none", "side_effect": "none", "operations": ["result.read"], "route": {"kind": "direct"}},
     {"n": 21, "name": "social_approvals_status", "spec_name": "social.approvals.status", "risk": "READ", "approval": "none", "side_effect": "none", "operations": ["approval.read"], "route": {"kind": "direct"}},
-    {"n": 22, "name": "social_system_health", "spec_name": "social.system.health", "risk": "READ", "approval": "none", "side_effect": "none", "operations": ["system.health"], "route": {"kind": "direct"}}
+    {"n": 22, "name": "social_system_health", "spec_name": "social.system.health", "risk": "READ", "approval": "none", "side_effect": "none", "operations": ["system.health"], "route": {"kind": "direct"}},
+    {"n": 23, "name": "social_web_feed_read", "spec_name": "social.web.feed.read", "risk": "READ", "approval": "none", "side_effect": "none", "operations": ["web.feed.read"], "route": {"kind": "direct"}},
+    {"n": 24, "name": "social_web_jobs_search", "spec_name": "social.web.jobs.search", "risk": "READ", "approval": "none", "side_effect": "none", "operations": ["web.jobs.search"], "route": {"kind": "direct"}},
+    {"n": 25, "name": "social_extract_start", "spec_name": "social.extract.start", "risk": "LOCAL_WRITE", "approval": "none", "side_effect": "local_state", "operations": ["data.collect"], "route": {"kind": "direct"}},
+    {"n": 26, "name": "social_extract_sources", "spec_name": "social.extract.sources", "risk": "READ", "approval": "none", "side_effect": "none", "operations": ["data.source.read"], "route": {"kind": "direct"}},
+    {"n": 27, "name": "social_datasets_query", "spec_name": "social.datasets.query", "risk": "READ", "approval": "none", "side_effect": "none", "operations": ["data.dataset.query"], "route": {"kind": "direct"}},
+    {"n": 28, "name": "social_datasets_export", "spec_name": "social.datasets.export", "risk": "LOCAL_WRITE", "approval": "none", "side_effect": "local_state", "operations": ["data.dataset.export"], "route": {"kind": "direct"}}
   ],
   "skills": [
     {"id": "account.connect", "version": "1.0.0", "operations": ["auth.connect", "account.read", "capability.read"], "execution": "workflow", "workflow": "oauth.connect@1", "risk": "LOCAL_WRITE", "approval": "none", "failure_policy": "stop"},
@@ -233,7 +245,8 @@
     "social://policies/{provider}"
   ],
   "prompts": ["social_select_tool", "social_prepare_content", "social_review_publish", "social_diagnose"],
-  "migrations": ["0001_core", "0002_workflows", "0003_approvals_usage", "0004_acceptance", "0005_standing_grants", "0006_evidence_signoffs"],
+  "migrations": ["0001_core", "0002_workflows", "0003_approvals_usage", "0004_acceptance", "0005_standing_grants", "0006_evidence_signoffs", "0007_browser_datasets", "0008_dataset_coverage", "0009_dataset_deadline"],
+  "migration_updates": {"0008_dataset_coverage": ["extraction_runs", "extraction_sources"], "0009_dataset_deadline": ["extraction_runs"]},
   "tables": [
     {"name": "schema_meta", "migration": "0001_core", "secret": false, "encrypted_columns": []},
     {"name": "provider_apps", "migration": "0001_core", "secret": false, "encrypted_columns": []},
@@ -255,6 +268,10 @@
     {"name": "operation_acceptance", "migration": "0004_acceptance", "secret": false, "encrypted_columns": []},
     {"name": "standing_grants", "migration": "0005_standing_grants", "secret": false, "encrypted_columns": []},
     {"name": "standing_grant_uses", "migration": "0005_standing_grants", "secret": false, "encrypted_columns": []},
-    {"name": "evidence_signoffs", "migration": "0006_evidence_signoffs", "secret": false, "encrypted_columns": []}
+    {"name": "evidence_signoffs", "migration": "0006_evidence_signoffs", "secret": false, "encrypted_columns": []},
+    {"name": "browser_sources", "migration": "0007_browser_datasets", "secret": false, "encrypted_columns": []},
+    {"name": "extraction_runs", "migration": "0007_browser_datasets", "secret": false, "encrypted_columns": []},
+    {"name": "extraction_sources", "migration": "0007_browser_datasets", "secret": false, "encrypted_columns": []},
+    {"name": "dataset_records", "migration": "0007_browser_datasets", "secret": false, "encrypted_columns": []}
   ]
 }

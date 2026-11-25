@@ -1,0 +1,19 @@
+[Unit]
+Description=XN-Interact headless browser broker
+StartLimitIntervalSec=120
+StartLimitBurst=3
+
+[Service]
+Type=simple
+WorkingDirectory=%h/code/XN-Interact
+Environment=XN_INTERACT_BROWSER_CONTINUOUS=1
+UMask=0077
+ExecStartPre=/usr/bin/install -d -m 0700 %h/code/XN-Interact/data %h/code/XN-Interact/data/browser
+ExecStart=/usr/bin/flock -n --no-fork %h/code/XN-Interact/data/browser/owner.lock %h/.bun/bin/bun %h/code/XN-Interact/src/browser/daemon.ts serve
+Restart=on-failure
+RestartSec=10
+KillMode=mixed
+TimeoutStopSec=45
+
+[Install]
+WantedBy=default.target

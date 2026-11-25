@@ -102,7 +102,7 @@ describe("backup", () => {
     expect(b.bytes).toBeGreaterThan(0);
     expect((await Bun.file(dest).stat()).mode & 0o777).toBe(0o600);
     expect(readFileSync(dest).toString("latin1").includes("CANARYBKP9")).toBe(false);
-    expect(verifyBackup(dest)).toEqual({ ok: true, problems: [], migrations: 6 });
+    expect(verifyBackup(dest)).toEqual({ ok: true, problems: [], migrations: 9 });
     expect(() => backup(ctx.app.db, dest)).toThrow(/refusing to overwrite/);
   });
 

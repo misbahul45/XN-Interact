@@ -1,0 +1,9 @@
+- heading "host page" [level=1]
+- iframe
+- paragraph: 33 results
+- button "Example Energy Jakarta, Indonesia (Hybrid) Dismiss Energy Engineering Intern job Posted 5 days ago":
+  - paragraph: Energy Engineering Intern
+  - paragraph: Example Energy
+  - paragraph: Jakarta, Indonesia (Hybrid)
+  - button "Dismiss Energy Engineering Intern job"
+  - paragraph: Posted 5 days ago

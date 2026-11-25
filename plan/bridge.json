@@ -46,7 +46,12 @@
     {"id": "social.workflow.status", "tools": ["social_workflows_status", "social_results_get"], "cost": "FREE_LOCAL", "description": "XN-Interact run state and scoped results", "degraded": "Report the run outcome as unknown and reconcile."},
     {"id": "social.workflow.cancel", "tools": ["social_workflows_cancel"], "cost": "FREE_LOCAL", "description": "Stop future XN-Interact steps", "degraded": "Tell the user cancellation could not be recorded."},
     {"id": "social.approval.status", "tools": ["social_approvals_status"], "cost": "FREE_LOCAL", "description": "Read XN-Interact human approval decisions", "degraded": "Treat the approval as not granted."},
-    {"id": "social.health", "tools": ["social_system_health"], "cost": "FREE_LOCAL", "description": "Vault, provider, workflow and quota readiness", "degraded": "Treat XN-Interact as unavailable."}
+    {"id": "social.health", "tools": ["social_system_health"], "cost": "FREE_LOCAL", "description": "Vault, provider, workflow and quota readiness", "degraded": "Treat XN-Interact as unavailable."},
+    {"id": "social.linkedin.read", "tools": ["social_web_feed_read", "social_web_jobs_search"], "cost": "FREE_LIMITED", "description": "Legacy LinkedIn reader on a dedicated Chrome session with documented platform permission", "degraded": "Use permitted public career pages and official ATS boards."},
+    {"id": "data.source.read", "tools": ["social_extract_sources"], "cost": "FREE_LOCAL", "description": "List registered browser source scopes and their observed health", "degraded": "No verified source registration is available."},
+    {"id": "data.collect", "tools": ["social_extract_start"], "cost": "FREE_LOCAL", "description": "Collect a local dataset using the headless persistent-profile broker", "degraded": "No collection started. Check source registration or broker health."},
+    {"id": "data.dataset.query", "tools": ["social_datasets_query"], "cost": "FREE_LOCAL", "description": "Query a local dataset by reference", "degraded": "Dataset query unavailable."},
+    {"id": "data.dataset.export", "tools": ["social_datasets_export"], "cost": "FREE_LOCAL", "description": "Export a dataset to the protected local directory", "degraded": "No export was created."}
   ],
   "risk_rules": [
     {"server": "xn-interact", "tool": "social_auth_connect", "risk": "LOCAL_WRITE"},
@@ -71,6 +76,12 @@
     {"server": "xn-interact", "tool": "social_results_get", "risk": "READ"},
     {"server": "xn-interact", "tool": "social_approvals_status", "risk": "READ"},
     {"server": "xn-interact", "tool": "social_system_health", "risk": "READ"},
+    {"server": "xn-interact", "tool": "social_web_feed_read", "risk": "READ"},
+    {"server": "xn-interact", "tool": "social_web_jobs_search", "risk": "READ"},
+    {"server": "xn-interact", "tool": "social_extract_start", "risk": "LOCAL_WRITE"},
+    {"server": "xn-interact", "tool": "social_extract_sources", "risk": "READ"},
+    {"server": "xn-interact", "tool": "social_datasets_query", "risk": "READ"},
+    {"server": "xn-interact", "tool": "social_datasets_export", "risk": "LOCAL_WRITE"},
     {"server": "xn-interact", "tool": "*", "risk": "EXTERNAL_WRITE"}
   ],
   "outcome_map": [
@@ -104,7 +115,7 @@
     "stages": [
       {"name": "connect", "goal": "Connect or reauthorize the accounts the task needs", "capabilities": [], "optional_capabilities": ["social.account.connect", "social.account.status"], "risk": "LOCAL_WRITE", "optional": true, "actions": []},
       {"name": "inspect", "goal": "Resolve explicit target accounts and their capability verdicts", "capabilities": ["social.account.list", "social.capability.read"], "optional_capabilities": ["social.health"], "risk": "READ", "optional": false, "actions": ["targets.set"]},
-      {"name": "collect", "goal": "Read content, engagement, search results or analytics", "capabilities": [], "optional_capabilities": ["social.content.read", "social.engagement.read", "social.search", "social.analytics.read"], "risk": "READ", "optional": true, "actions": []},
+      {"name": "collect", "goal": "Read content, engagement, search results or analytics", "capabilities": [], "optional_capabilities": ["social.content.read", "social.engagement.read", "social.search", "social.analytics.read", "social.linkedin.read"], "risk": "READ", "optional": true, "actions": []},
       {"name": "prepare", "goal": "Prepare a local draft, media and per-provider previews", "capabilities": [], "optional_capabilities": ["social.content.draft", "social.media.stage"], "risk": "LOCAL_WRITE", "optional": true, "actions": []},
       {"name": "act", "goal": "Plan, obtain both approvals, execute once and record the attempt", "capabilities": [], "optional_capabilities": ["social.content.publish", "social.content.update", "social.content.delete", "social.engagement.act", "social.workflow.run", "social.workflow.cancel", "social.account.disconnect", "social.approval.status"], "risk": "EXTERNAL_WRITE", "optional": true, "actions": ["plan.record"]},
       {"name": "verify", "goal": "Record per-target outcomes and evidence", "capabilities": ["social.workflow.status"], "optional_capabilities": ["social.content.read", "social.approval.status"], "risk": "READ", "optional": false, "actions": ["result.record"]}
@@ -113,6 +124,14 @@
       {"name": "targets.set", "stage": "inspect", "risk": "LOCAL_WRITE", "payload_fields": ["account_ids", "providers"]},
       {"name": "plan.record", "stage": "act", "risk": "LOCAL_WRITE", "payload_fields": ["plan_id", "plan_hash", "operation", "account_ids", "interact_approval_id", "bridge_approval_id"], "safe_when_pending": true},
       {"name": "result.record", "stage": "verify", "risk": "LOCAL_WRITE", "payload_fields": ["plan_id", "run_id", "run_state", "targets"]}
+    ]
+  },
+  "data_domain": {
+    "name": "data",
+    "stages": [
+      {"name": "collect", "goal": "Resolve registered source scope and start collection", "capabilities": ["data.collect"], "optional_capabilities": ["data.source.read"], "risk": "LOCAL_WRITE", "optional": false, "actions": []},
+      {"name": "query", "goal": "Read dataset records and coverage", "capabilities": ["data.dataset.query"], "optional_capabilities": ["social.workflow.status"], "risk": "READ", "optional": false, "actions": []},
+      {"name": "export", "goal": "Write a local dataset export", "capabilities": ["data.dataset.export"], "optional_capabilities": [], "risk": "LOCAL_WRITE", "optional": true, "actions": []}
     ]
   },
   "routing": {

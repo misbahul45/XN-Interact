@@ -55,7 +55,7 @@ function sha256(path: string): string {
   return new Bun.CryptoHasher("sha256").update(readFileSync(path)).digest("hex");
 }
 
-export function backup(db: Db, dest: string): { path: string; sha256: string; bytes: number } {
+export function backup(db: Pick<Db, "raw">, dest: string): { path: string; sha256: string; bytes: number } {
   if (existsSync(dest) || existsSync(`${dest}.sha256`)) throw new Error(`refusing to overwrite ${dest}`);
   db.raw.query("VACUUM INTO ?").run(dest);
   chmodSync(dest, 0o600);
@@ -76,8 +76,9 @@ export function verifyBackup(path: string): { ok: boolean; problems: string[]; m
       const integrity = (db.query("PRAGMA integrity_check").get() as { integrity_check: string }).integrity_check;
       if (integrity !== "ok") problems.push(`integrity_check: ${integrity}`);
       if (db.query("PRAGMA foreign_key_check").all().length) problems.push("foreign key violations");
-      migrations = (db.query("SELECT count(*) AS n FROM schema_meta WHERE key LIKE 'migration:%'").get() as { n: number }).n;
-      if (migrations !== CATALOG.migrations.length) problems.push(`expected ${CATALOG.migrations.length} migrations, found ${migrations}`);
+      const ids = (db.query("SELECT key FROM schema_meta WHERE key LIKE 'migration:%' ORDER BY key").all() as { key: string }[]).map((row) => row.key.slice(10));
+      migrations = ids.length;
+      if (!migrations || ids.some((id, index) => id !== CATALOG.migrations[index])) problems.push("unknown migration history");
     } finally {
       db.close();
     }

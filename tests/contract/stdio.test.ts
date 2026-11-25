@@ -28,7 +28,7 @@ function env(r: unknown): any {
 }
 
 describe("stdio MCP contract", () => {
-  test("tools/list equals the catalog: 22 snake_case tools with annotations and schemas", async () => {
+  test("tools/list equals the catalog with annotations and schemas", async () => {
     const { tools } = await client.listTools();
     expect(tools.map((t) => t.name).sort()).toEqual(CATALOG.tools.map((t) => t.name).sort());
     for (const t of tools) {

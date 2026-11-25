@@ -60,12 +60,13 @@ export class ProviderHttp {
     const gate = this.gates.get(provider) ?? new Semaphore(this.opts.concurrency ?? 4);
     this.gates.set(provider, gate);
     const fetcher = this.opts.fetchImpl ?? fetch;
+    const body = req.body instanceof Uint8Array ? new Uint8Array(req.body) : req.body;
     const maxRetries = req.safe ? (this.opts.maxRetries ?? 2) : 0;
     let attempt = 0;
     for (;;) {
       try {
         const res = await gate.run(() =>
-          fetcher(u, { method: req.method, headers: req.headers, body: req.body, redirect: "manual", signal: AbortSignal.timeout(req.timeoutMs ?? 15000) }),
+          fetcher(u, { method: req.method, headers: req.headers, body, redirect: "manual", signal: AbortSignal.timeout(req.timeoutMs ?? 15000) }),
         );
         const text = await res.text();
         if (res.status >= 300 && res.status < 400) throw new GatewayError("INVALID_PROVIDER_RESPONSE", "provider redirected; redirects are not followed", { provider, provider_status: res.status });

@@ -17,6 +17,8 @@ const envSchema = z.object({
   XN_INTERACT_PUBLIC_MEDIA_DIR: z.string().optional(),
   XN_INTERACT_FIXTURE_PROVIDER: z.enum(["0", "1"]).default("0"),
   XN_INTERACT_TICK_MS: z.coerce.number().int().min(0).default(2000),
+  XN_INTERACT_BROWSER_IDLE_MS: z.coerce.number().int().min(1000).max(3_600_000).default(120_000),
+  XN_INTERACT_BROWSER_CONTINUOUS: z.enum(["0", "1"]).default("0"),
 });
 
 export interface Config {
@@ -37,6 +39,8 @@ export interface Config {
   redirectMode: "auto" | "loopback" | "https";
   fixtureProvider: boolean;
   tickMs: number;
+  browserIdleMs: number;
+  browserContinuous: boolean;
   processId: string;
 }
 
@@ -81,6 +85,8 @@ export function loadConfig(env: Record<string, string | undefined> = process.env
     redirectMode: e.XN_INTERACT_REDIRECT_MODE,
     fixtureProvider: e.XN_INTERACT_FIXTURE_PROVIDER === "1",
     tickMs: e.XN_INTERACT_TICK_MS,
+    browserIdleMs: e.XN_INTERACT_BROWSER_IDLE_MS,
+    browserContinuous: e.XN_INTERACT_BROWSER_CONTINUOUS === "1",
     processId: `${process.pid}-${crypto.randomUUID().slice(0, 8)}`,
   };
 }

@@ -5,10 +5,15 @@ import { join } from "node:path";
 import { Client } from "@modelcontextprotocol/client";
 import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
 import { fixtureConsent } from "../../src/providers/fixture/adapter.ts";
+import { loadConfig } from "../../src/bootstrap/config.ts";
+import { brokerCall } from "../../src/browser/ipc.ts";
+import { ExtractionStore } from "../../src/extraction/store.ts";
+import { Db } from "../../src/storage/db.ts";
 import { ROOT, tempHome, testEnv } from "../helpers.ts";
 
-const BRIDGE = join(homedir(), "code", "XN-Bridge");
-const PY = join(BRIDGE, ".venv", "bin", "python");
+const BRIDGE = process.env.XN_BRIDGE_TEST_ROOT ?? join(homedir(), "code", "XN-Bridge");
+const PY = process.env.XN_BRIDGE_TEST_PYTHON ?? join(BRIDGE, ".venv", "bin", "python");
+const bridgeSource = join(BRIDGE, "src");
 const available = existsSync(PY);
 
 let bridge: Client;
@@ -30,7 +35,7 @@ async function call(c: Client, name: string, args: Record<string, unknown> = {})
 }
 
 function py(...args: string[]): string {
-  const p = Bun.spawnSync([PY, ...args], { env: { ...process.env, XN_BRIDGE_HOME: bridgeHome, XN_BRIDGE_HOST: "claude" }, cwd: BRIDGE });
+  const p = Bun.spawnSync([PY, ...args], { env: { ...process.env, XN_BRIDGE_HOME: bridgeHome, XN_BRIDGE_HOST: "claude", PYTHONPATH: bridgeSource }, cwd: BRIDGE });
   if (p.exitCode !== 0) throw new Error(`python ${args.join(" ")} failed: ${p.stderr.toString().slice(-800)}`);
   return p.stdout.toString();
 }
@@ -48,10 +53,10 @@ beforeAll(async () => {
   interactHome = join(base, "interact");
   mkdirSync(interactHome, { recursive: true });
   interactEnv = { ...testEnv(interactHome, { XN_INTERACT_KEYRING: "file", XN_INTERACT_FIXTURE_PROVIDER: "1", XN_INTERACT_FIXTURE_STATE: join(interactHome, "remote.json") }), PATH: process.env.PATH ?? "" };
-  py("-m", "xnbridge.cli", "discover", "--host", "claude", "--only", "xn-interact", "--timeout", "60");
+  py(join(ROOT, "tests/fixtures/bridge_human.py"), bridgeHome, "probe", process.execPath, join(ROOT, "src/main.ts"), JSON.stringify(interactEnv));
   py(join(ROOT, "tests/fixtures/bridge_human.py"), bridgeHome, "init");
   bridge = new Client({ name: "host-sim", version: "1.0.0" });
-  await bridge.connect(new StdioClientTransport({ command: PY, args: ["-m", "xnbridge.server"], cwd: BRIDGE, env: { XN_BRIDGE_HOME: bridgeHome, XN_BRIDGE_HOST: "claude", PATH: process.env.PATH ?? "" } }));
+  await bridge.connect(new StdioClientTransport({ command: PY, args: ["-m", "xnbridge.server"], cwd: BRIDGE, env: { XN_BRIDGE_HOME: bridgeHome, XN_BRIDGE_HOST: "claude", PATH: process.env.PATH ?? "", PYTHONPATH: bridgeSource } }));
   interact = new Client({ name: "host-sim", version: "1.0.0" });
   await interact.connect(new StdioClientTransport({ command: process.execPath, args: ["run", join(ROOT, "src/main.ts")], env: interactEnv }));
 }, 120_000);
@@ -62,6 +67,46 @@ afterAll(async () => {
 });
 
 describe.skipIf(!available)("host-mediated flow across XN-Bridge and XN-Interact", () => {
+  test("route a dataset, call XN-Interact over MCP, and register compact coverage evidence", async () => {
+    const website = Bun.serve({ hostname: "127.0.0.1", port: 0, fetch: () => new Response(
+      '<main><article data-xn-record="one"><p data-xn-field="title">Fixture opportunity</p></article><p data-xn-end>End of results</p></main>',
+      { headers: { "content-type": "text/html" } },
+    ) });
+    const cfg = loadConfig(interactEnv);
+    const db = new Db(cfg.dbPath);
+    try {
+      new ExtractionStore(db, true).register({ id: "bridge-source", url: `${website.url.origin}/data`, path_prefix: "/data",
+        permission: "owner_controlled", fields: [{ name: "title", type: "string" }] });
+      const route = await call(bridge, "route_intent", { text: "Kumpulkan dataset dari situs yang diotorisasi" });
+      expect(route.intent).toBe("data.collect");
+      expect(route.providers["data.collect"].selected).toBe("xn-interact:social_extract_start");
+      const resolution = await call(bridge, "capability_resolve", { capability: "data.collect" });
+      expect(resolution.selected.runtime.browser_mode).toBe("headless");
+      const result = await call(interact, resolution.selected.tool, { request_id: "bridge-browser-fixture",
+        objective: "Collect fixture opportunities", sources: ["bridge-source"], entity_type: "listing",
+        fields: [{ name: "title", type: "string" }], coverage: "all_accessible" });
+      expect(result.ok).toBe(true);
+      const id = result.data.run_id;
+      let view = result.data;
+      for (let i = 0; i < 100 && ["queued", "running"].includes(view.status); i++) {
+        await Bun.sleep(100);
+        view = (await call(interact, "social_workflows_status", { run_id: id })).data;
+      }
+      expect(view.coverage).toMatchObject({ status: "COMPLETE_WITHIN_SCOPE", unique_records: 1, expected_total: null });
+      const workflow = await call(bridge, "workflow_create", { domain: "data", title: "Browser fixture dataset" });
+      expect(workflow.workflow_id ?? workflow.id).toBeTruthy();
+      const evidence = await call(bridge, "evidence_register", {
+        workflow_id: workflow.workflow_id ?? workflow.id, claim: "Local fixture collection observed one record",
+        origin: "tool_output", source_ref: `social://datasets/${id}`, content: JSON.stringify(view), verification: "VERIFIED", provider: "xn-interact",
+      });
+      expect(evidence.verification).toBe("VERIFIED");
+    } finally {
+      await brokerCall(cfg, "stop");
+      await website.stop(true);
+      db.close();
+    }
+  }, 30_000);
+
   test("route, workflow, plan, both approvals, execute once, evidence, result, completion", async () => {
     const route = await call(bridge, "route_intent", { text: "posting ke linkedin: rilis fitur baru XN-Interact" });
     expect(route.domain).toBe("social");

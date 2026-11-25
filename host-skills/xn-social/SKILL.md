@@ -1,12 +1,12 @@
 ---
 name: xn-social
-description: Operates the owner's connected social accounts (LinkedIn, Instagram, TikTok, X, Threads, Reddit, Facebook) through XN-Interact with XN-Bridge workflow state: connect via official OAuth, inspect capabilities, read content, engagement and analytics, and publish, edit, delete or reply only after the owner approves the exact plan in a terminal. Use for any social media posting, crossposting, comment, analytics or account-connection request.
+description: "Operates the owner's connected social accounts (LinkedIn, Instagram, TikTok, X, Threads, Reddit, Facebook) through XN-Interact with XN-Bridge workflow state: connect via official OAuth, inspect capabilities, read content, engagement and analytics, and publish, edit, delete or reply only after the owner approves the exact plan in a terminal. Use for any social media posting, crossposting, comment, analytics or account-connection request."
 ---
 
 # XN-Interact social workflow
 
 Required capabilities: social.account.list, social.capability.read, social.workflow.status, workflow.persist, evidence.store
-Optional capabilities: social.account.connect, social.account.status, social.content.read, social.content.draft, social.media.stage, social.content.publish, social.content.update, social.content.delete, social.engagement.read, social.engagement.act, social.analytics.read, social.search, social.workflow.run, social.workflow.cancel, social.approval.status, social.account.disconnect, social.health
+Optional capabilities: social.account.connect, social.account.status, social.content.read, social.content.draft, social.media.stage, social.content.publish, social.content.update, social.content.delete, social.engagement.read, social.engagement.act, social.analytics.read, social.search, social.workflow.run, social.workflow.cancel, social.approval.status, social.account.disconnect, social.health, social.linkedin.read
 
 Use with the `xn-bridge` skill. XN-Interact (`social_*` tools) talks to the providers; XN-Bridge keeps the workflow, evidence and execution records. Neither calls the other: you relay.
 
@@ -15,7 +15,7 @@ Use with the `xn-bridge` skill. XN-Interact (`social_*` tools) talks to the prov
 1. `route_intent(text)` → domain `social`, an intent, a `plan` with selected providers and `next`. Then `workflow_create(domain="social")`.
 2. inspect: `social_accounts_list`, then `social_capabilities_get(account_id)` for every target. Only `AVAILABLE` and `NEEDS_APPROVAL` operations can run. Record targets with `domain_action(social, targets.set, {account_ids})`.
 3. connect (only when needed): `social_auth_connect` → give the owner `auth_url` → poll `social_auth_status`. Never ask for passwords or tokens. `MISSING_SCOPES` → `mode=upgrade`.
-4. collect: `social_content_list`, `social_engagement_list`, `social_analytics_get`, `social_search`. Register findings with `evidence_register(origin="tool_output")`.
+4. collect: `social_content_list`, `social_engagement_list`, `social_analytics_get`, `social_search`. Register findings with `evidence_register(origin="tool_output")`. Job and fellowship discovery is career work: use skill `xn-career`, which reads LinkedIn Jobs and the For-you feed through `social_web_jobs_search` and `social_web_feed_read` (read-only, in the owner's own Chrome, results are leads).
 5. prepare: `social_media_upload` for local files, then `social_content_create` for the draft. Use only facts the owner gave you.
 6. act (two-phase, never skip):
    - Call the write tool with `mode="plan"`. Show the owner every target, the per-provider text, excluded targets with reasons, cost and the `plan_hash`.

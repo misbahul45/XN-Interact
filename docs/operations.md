@@ -22,6 +22,10 @@ journalctl --user -u xn-interact-worker -n 20
 systemctl --user disable --now xn-interact-worker && rm ~/.config/systemd/user/xn-interact-worker.service   # rollback
 ```
 
+## Browser broker
+
+Browser collection runs through a separate on-demand broker. See the [headless guide](headless-architecture.md) for profile setup, user service commands, checkpoint recovery and rollback.
+
 ## Vault
 
 The master key lives in the OS keyring (service `xn-interact`). `vault status` shows `unlocked`, `uninitialized` or `locked`; `locked` means the keyring was unreachable (for example an SSH session without a session bus) and sensitive tools return `VAULT_LOCKED`. Nothing falls back to plaintext. `vault rotate` adds a new key version; older ciphertext stays readable.

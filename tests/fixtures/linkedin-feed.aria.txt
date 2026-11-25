@@ -1,0 +1,19 @@
+- heading "Feed post" [level=2] [ref=e1]
+- generic [ref=e2]:
+  - link "Example Scholarships" [ref=e3]:
+    - /url: https://www.linkedin.com/company/example-scholarships/
+  - text: 2d •
+  - text: "Example Global Internship Program, funded. Deadline: rolling. Contact recruiter@example.com or +62 812 3456 7890 to apply."
+  - link "View hashtag: #internship" [ref=e4]:
+    - strong [ref=e5]: "#Internship"
+- heading "Feed post" [level=2] [ref=e6]
+- generic [ref=e7]:
+  - text: 3h •
+  - text: "I just finished a chapter on gradient descent and wanted to share my notes."
+- heading "Feed post" [level=2] [ref=e8]
+- generic [ref=e9]:
+  - paragraph [ref=e10]: Promoted
+  - link "Acme" [ref=e11]:
+    - /url: https://www.linkedin.com/company/acme/
+  - text: 1w •
+  - text: "Acme is hiring a Software Engineer in Jakarta."

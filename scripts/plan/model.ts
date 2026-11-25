@@ -160,6 +160,7 @@ export interface Catalog {
   resources: string[];
   prompts: string[];
   migrations: string[];
+  migration_updates?: Record<string, string[]>;
   tables: { name: string; migration: string; secret: boolean; encrypted_columns: string[] }[];
 }
 
@@ -205,6 +206,7 @@ export interface Bridge {
     stages: BridgeStage[];
     actions: { name: string; stage: string; risk: string; payload_fields: string[]; safe_when_pending?: boolean }[];
   };
+  data_domain: { name: string; stages: BridgeStage[] };
   routing: {
     precedence: string[];
     career_guard_terms: string[];

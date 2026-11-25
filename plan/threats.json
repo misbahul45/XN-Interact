@@ -465,6 +465,49 @@
           "name": "only a plain HTTPS directory URL is accepted"
         }
       ]
+    },
+    {
+      "id": "T27",
+      "title": "Browser operation scope, profile or data collection misused by a host or untrusted page",
+      "requirements": [
+        "SEC-03",
+        "ROUTE-08",
+        "SEC-05"
+      ],
+      "tests": [
+        {
+          "file": "tests/security/web-reader.test.ts",
+          "name": "Playwright imports stay in browser adapters and the legacy reader uses no mutation or credential API"
+        },
+        {
+          "file": "tests/security/web-reader.test.ts",
+          "name": "the debug endpoint must be a plain http loopback origin with an explicit port"
+        },
+        {
+          "file": "tests/security/web-reader.test.ts",
+          "name": "only the allowed LinkedIn read paths on https can be opened"
+        },
+        {
+          "file": "tests/security/web-reader.test.ts",
+          "name": "login, checkpoint and CAPTCHA pages stop the reader instead of being passed"
+        },
+        {
+          "file": "tests/security/web-reader.test.ts",
+          "name": "requests are validated and clamped, and the URL is built only from validated parts"
+        },
+        {
+          "file": "tests/security/web-reader.test.ts",
+          "name": "feed posts keep only opportunity posts, drop contact details and flag promoted ones"
+        },
+        {
+          "file": "tests/security/web-reader.test.ts",
+          "name": "page text is stripped of control characters and cut to a bound"
+        },
+        {
+          "file": "tests/security/web-reader.test.ts",
+          "name": "an unreachable Chrome fails closed with the launch instruction and writes an audit event without page content"
+        }
+      ]
     }
   ]
 }

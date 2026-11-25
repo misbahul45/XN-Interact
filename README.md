@@ -1,16 +1,27 @@
 # XN-Interact
 
-Bun-native MCP server that operates the officially supported parts of the owner's social accounts (LinkedIn, Instagram, TikTok, X, Threads, Reddit, Facebook) through provider OAuth. No frontend, no internal model, no browser fallback. XN-Bridge coordinates it with the owner's other MCP servers.
+Bun-native stdio MCP gateway for authorized browser datasets and existing social provider APIs. Browser collection starts a shared local broker and sandboxed Google Chrome headlessly on demand. Chrome keeps authenticated state in a dedicated profile. XN-Bridge discovers the same `xn-interact` server across hosts.
 
-## State on 2026-11-20
+## Browser collection
 
-- Kernel complete and tested: 22 tools, 9 resources, 4 prompts over stdio; OAuth broker with state, PKCE (base64url or hex) and a loopback callback; AES-256-GCM vault keyed from the OS keyring (fails closed); capability truth function with an evidence-freshness gate; budgets; immutable plans; terminal-only approvals; intent journal; workflow engine with fan-out, reconciliation, restart recovery, single-flight runs, atomic step claims, per-run and per-grant leases, cancellation and scheduling; retention and verified backups.
+```bash
+bun install --frozen-lockfile
+bun run src/cli.ts setup
+bun run src/cli.ts browser register /path/to/source-manifest.json
+bun run src/cli.ts auth setup <source-id>
+```
+
+Run `auth setup` for sources with an approved login and a visible account marker. Hosts can call `social_extract_sources`, `social_extract_start` and `social_workflows_status` to collect data and query it by reference. [Headless setup and recovery](docs/headless-architecture.md) · [Extraction contract](docs/extraction-runtime.md) · [Provider readiness](docs/provider-capabilities.md)
+
+## Legacy provider API backend
+
+- The 22 original stdio tools grew to 24 with the LinkedIn reader and 28 with extraction and datasets. Existing OAuth accounts, the OS-keyring vault, terminal approvals, intent journaling, reconciliation and scheduling continue to support the provider API backend.
 - Providers: OAuth **login is built and tested for all seven** (Threads, TikTok, X, LinkedIn, Instagram, Facebook, Reddit) against the official endpoints; see [docs/login.md](docs/login.md) and run `bun run src/cli.ts providers`. Publishing and reading stay **UNVERIFIED** for every provider until a real approved post and read-back pass. No real login or post has been made yet because that needs your developer apps. Signed Stage-0 evidence is in `docs/providers/`; Threads is the first slice (ADR-028).
 - XN-Bridge: `xn-interact` and `xn-bridge` are registered in every host config on this machine; 20 `social.*` capabilities resolve to `xn-interact`; a `social` domain, social routing and one dynamic router exist.
 - Operations: the `xn-interact-worker` systemd user service runs scheduled and pending workflows ([operations guide](docs/operations.md)).
-- Tests: `bun test` (154), run three times in a row after every change to concurrency-sensitive code.
+- Tests and live acceptance procedure are in the [headless verification guide](docs/testing/headless-acceptance.md).
 
-## Run
+## OAuth operator commands
 
 ```bash
 bun install

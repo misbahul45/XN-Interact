@@ -34,3 +34,4 @@ ADR-001 to ADR-018 come from the baseline specification (section 2) and stand as
 | 028 | First vertical-slice provider: Threads, TikTok as the fallback ([ADR-028](ADR-028-first-provider.md)) | Accepted | P0-15 |
 | 029 | Approval federation ([design](ADR-029-approval-federation.md)) | Proposed: one CLI screen signing both keys | INT-10 |
 | 030 | One dynamic XN-Bridge router: declarative intents, capability index, live providers in every decision | Accepted | CR-29 |
+| 031 | [Shared headless Chrome broker](ADR-031-headless-browser.md) | Accepted for registered sites | Browser collection |
